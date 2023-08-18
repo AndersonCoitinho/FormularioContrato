@@ -1,0 +1,26 @@
+from flask import Flask, render_template, request, send_file
+from docx import Document
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template('index.html') #vai renderizar o index
+
+@app.route('/generate_docx', methods=['POST']) 
+def generate_docx(): #executara a função generate_docx quando a rota /generate_docx for executada
+    data = request.form #obtem os dados do formulario
+    
+    nome_arquivo = data.get('nome', 'resposta') #busca o nome do usuario para inserir como nome do arquivo, caso nao tenha nome fica como resposta
+
+    doc = Document() #usada para criar documentos docx
+    doc.add_heading('Respostas do Formulário', level=1) #adiciona titulo no arquivo
+    
+    for key, value in data.items():
+        doc.add_paragraph(f'{key}: {value}') #adiciona um paragrafo contendo a chave e o valor dos dados do formulário
+    
+    doc.save(f'{nome_arquivo}.docx') #salvo o arquivo
+    return send_file(f'{nome_arquivo}.docx', as_attachment=True) #usando a função flask envia o arquivo gerado para download
+
+if __name__ == '__main__':
+    app.run(debug=True)
