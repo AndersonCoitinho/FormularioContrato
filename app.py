@@ -83,9 +83,7 @@ def gerar_docx():
         paragraph_text = paragraph.text
         if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
             paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
-               
-    #doc1_path = (f'Contrato Honorarios_{nome}.docx')
-    #doc1.save(doc1_path)
+
     doc1_path = os.path.join('modelos', f'Contrato Honorarios_{nome}.docx')
     doc1.save(doc1_path)
 
@@ -125,8 +123,6 @@ def gerar_docx():
         if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
             paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
 
-    #doc2_path = (f'Justica Gratuita_{nome}.docx')
-    #doc2.save(doc2_path)
     doc2_path = os.path.join('modelos', f'Justica Gratuita_{nome}.docx')
     doc2.save(doc2_path)
 
@@ -166,22 +162,8 @@ def gerar_docx():
         if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
             paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
 
-    #doc3_path = (f'Procuracao_{nome}.docx')
-    #doc3.save(doc3_path)
     doc3_path = os.path.join('modelos', f'Procuracao_{nome}.docx')
     doc3.save(doc3_path)
-
-
-    # Criar um arquivo ZIP e adicionar os arquivos DOCX
-    #zip_path = 'arquivos_gerados.zip'
-    #with zipfile.ZipFile(zip_path, 'w') as zip_file:
-    #    zip_file.write(doc1_path)
-    #    zip_file.write(doc2_path)
-    #    zip_file.write(doc3_path)
-
-    #Enviar o arquivo ZIP para download automático
-    #return send_file(zip_path, as_attachment=True)
-
 
     return render_template(
     'download.html',
