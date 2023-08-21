@@ -198,7 +198,13 @@ def gerar_docx():
     upload_to_s3(doc2_path, 'cadastroadv', f'datas/Justica_Gratuita_{nome}.docx')
     upload_to_s3(doc3_path, 'cadastroadv', f'datas/Procuracao_{nome}.docx')
 
-
+    return render_template(
+        'download.html',
+        nome=nome,
+        doc1_path=doc1_path,
+        doc2_path=doc2_path,
+        doc3_path=doc3_path
+    )
 
 if __name__ == '__main__':
     #app.run(debug=True)
