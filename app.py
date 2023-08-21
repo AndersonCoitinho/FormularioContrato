@@ -201,7 +201,8 @@ def gerar_docx():
         'download.html',
         doc1_path=doc1_path,
         doc2_path=doc2_path,
-        doc3_path=doc3_path
+        doc3_path=doc3_path,
+        nome=nome  # Adicione a variável nome ao contexto do template 
     )
 
 if __name__ == '__main__':
