@@ -198,7 +198,7 @@ def gerar_docx():
     
     #return response
 """
-return render_template(
+    return render_template(
         'download.html',
         nome=nome,
         doc1_path=doc1_path,
