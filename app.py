@@ -207,8 +207,11 @@ def gerar_docx():
 
 @app.route('/download/<filename>', methods=['GET'])
 def download(filename):
-    return send_file(filename, as_attachment=True)
-    
+    #return send_file(filename, as_attachment=True)
+    response = make_response(send_file(filename))
+    response.headers["Content-Disposition"] = f"attachment; filename={filename}"
+    return response
+
 
 if __name__ == '__main__':
     #app.run(debug=True)
