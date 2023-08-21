@@ -38,6 +38,18 @@ def gerar_docx():
     data_str = request.form['data']
 
 
+
+    pasta_modelos = 'modelos'
+
+    if os.access(pasta_modelos, os.W_OK):
+        print(f'A pasta "{pasta_modelos}" tem permissões de escrita.')
+    else:
+        print(f'A pasta "{pasta_modelos}" não tem permissões de escrita.')
+
+
+
+
+
     ### DATA ###
     # Converter a data em um objeto datetime
     #data = datetime.strptime(data_str, '%Y-%m-%d')
