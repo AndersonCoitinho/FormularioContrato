@@ -206,7 +206,7 @@ def gerar_docx():
         doc3_path=doc3_path
     )
     
-#@app.route('/download/<filename>')
+@app.route('/download/<filename>')
 #def download(filename):
 #    return send_file(filename, as_attachment=True)
 def download(filename):
