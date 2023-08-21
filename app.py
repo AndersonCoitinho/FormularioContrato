@@ -86,8 +86,17 @@ def gerar_docx():
                
     #doc1_path = (f'Contrato Honorarios_{nome}.docx')
     #doc1.save(doc1_path)
-    doc1_path = os.path.join('modelos', f'Contrato Honorarios_{nome}.docx')
-    doc1.save(doc1_path)
+    #doc1_path = os.path.join('modelos', f'Contrato Honorarios_{nome}.docx')
+    #doc1.save(doc1_path)
+    response = make_response()
+    response.data = doc1.save(None)  # 'None' indica que o conteúdo do arquivo será retornado
+
+    response.headers['Content-Disposition'] = f'attachment; filename=Contrato_Honorarios_{nome}.docx'
+    response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+
+    return response
+
+
 
     ### DOC2 = JUSTIÇA GRATUIDA ###
     doc2 = Document('./modelos/justicagratuita.docx')
