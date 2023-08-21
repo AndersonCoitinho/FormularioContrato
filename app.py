@@ -171,7 +171,7 @@ def gerar_docx():
     #doc2_path=doc2_path,
     #doc3_path=doc3_path
 #)
-
+    """
      # Preparar a resposta para download
     response = make_response()
 
@@ -197,7 +197,14 @@ def gerar_docx():
     #response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     
     #return response
-
+"""
+return render_template(
+        'download.html',
+        nome=nome,
+        doc1_path=doc1_path,
+        doc2_path=doc2_path,
+        doc3_path=doc3_path
+    )
     
 @app.route('/download/<filename>')
 def download(filename):
