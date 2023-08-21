@@ -206,9 +206,18 @@ def gerar_docx():
         doc3_path=doc3_path
     )
     
-@app.route('/download/<filename>')
+#@app.route('/download/<filename>')
+#def download(filename):
+#    return send_file(filename, as_attachment=True)
 def download(filename):
-    return send_file(filename, as_attachment=True)
+    if filename == 'doc1':
+        return send_file(doc1_path, as_attachment=True, attachment_filename=f'Contrato_Honorarios_{nome}.docx')
+    elif filename == 'doc2':
+        return send_file(doc2_path, as_attachment=True, attachment_filename=f'Justica_Gratuita_{nome}.docx')
+    elif filename == 'doc3':
+        return send_file(doc3_path, as_attachment=True, attachment_filename=f'Procuracao_{nome}.docx')
+    else:
+        return "Arquivo não encontrado", 404
 
 if __name__ == '__main__':
     #app.run(debug=True)
