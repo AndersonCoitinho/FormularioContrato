@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, make_response
 from docx import Document
 import os
 import smtplib
@@ -165,12 +165,17 @@ def gerar_docx():
     doc3_path = os.path.join('modelos', f'Procuracao_{nome}.docx')
     doc3.save(doc3_path)
 
-    return render_template(
-    'download.html',
-    doc1_path=doc1_path,
-    doc2_path=doc2_path,
-    doc3_path=doc3_path
-)
+    #return render_template(
+    #'download.html',
+    #doc1_path=doc1_path,
+    #doc2_path=doc2_path,
+    #doc3_path=doc3_path
+#)
+    response = make_response(send_file(doc1_path, as_attachment=True))
+    response.headers['Content-Disposition'] = f'attachment; filename=Contrato_Honorarios_{nome}.docx'
+    response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    
+    return response
 
     
 @app.route('/download/<filename>')

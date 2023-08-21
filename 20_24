@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, send_file
 from docx import Document
-
+import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
@@ -9,6 +9,9 @@ import zipfile
 
 from datetime import datetime
 import locale
+
+from urllib.parse import quote
+from flask import url_for
 
 
 app = Flask(__name__)
@@ -80,10 +83,9 @@ def gerar_docx():
         paragraph_text = paragraph.text
         if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
             paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
-               
-    doc1_path = (f'Contrato Honorarios_{nome}.docx')
-    doc1.save(doc1_path)
 
+    doc1_path = os.path.join('modelos', f'Contrato Honorarios_{nome}.docx')
+    doc1.save(doc1_path)
 
     ### DOC2 = JUSTIÇA GRATUIDA ###
     doc2 = Document('./modelos/justicagratuita.docx')
@@ -121,9 +123,8 @@ def gerar_docx():
         if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
             paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
 
-    doc2_path = (f'Justica Gratuita_{nome}.docx')
+    doc2_path = os.path.join('modelos', f'Justica Gratuita_{nome}.docx')
     doc2.save(doc2_path)
-
 
     ### DOC3 = PROCURAÇÃO ###
     doc3 = Document('./modelos/procuracao.docx')
@@ -161,59 +162,21 @@ def gerar_docx():
         if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
             paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
 
-    doc3_path = (f'Procuracao_{nome}.docx')
+    doc3_path = os.path.join('modelos', f'Procuracao_{nome}.docx')
     doc3.save(doc3_path)
 
-    #doc2.save(f'Justica Gratuita_{nome}.docx') #salvo o arquivo
-    #return send_file(f'Justica Gratuita_{nome}.docx', as_attachment=True)
-
-
-    # Criar um arquivo ZIP e adicionar os arquivos DOCX
-    zip_path = 'arquivos_gerados.zip'
-    with zipfile.ZipFile(zip_path, 'w') as zip_file:
-        zip_file.write(doc1_path)
-        zip_file.write(doc2_path)
-        zip_file.write(doc3_path)
-
-    #Enviar o arquivo ZIP para download automático
-    return send_file(zip_path, as_attachment=True)
-
-
-
-    #doc3 = Document('./modelos/procuracao.docx')
-
-"""
-def enviar_email(destinatario_email, arquivo_anexo):
-    de_email = 'rocha98918@gmail.com'  # Insira o seu endereço de email
-    senha = 'gjwjdybcftipvnbm'  # Insira sua senha de email
-    destinatario_email= 'andercoitinho@gmail.com'
-    msg = MIMEMultipart()
-    msg['From'] = de_email
-    msg['To'] = destinatario_email
-    msg['Subject'] = 'Arquivo DOCX Gerado e Anexado'
-
-    corpo = f'Olá,\n\nSegue o arquivo DOCX gerado.\n\nAtenciosamente,\nSeu Nome'
-    msg.attach(MIMEText(corpo, 'plain'))
-
-
-    attachment = open(arquivo_anexo, 'rb') #anexando o docx ao email
-    part = MIMEBase('application', 'octet-stream')
-    part.set_payload((attachment).read())
-    encoders.encode_base64(part)
-    part.add_header('Content-Disposition', f'attachment; filename={arquivo_anexo}')
-    msg.attach(part)
+    return render_template(
+    'download.html',
+    doc1_path=doc1_path,
+    doc2_path=doc2_path,
+    doc3_path=doc3_path
+)
 
     
-    server = smtplib.SMTP('smtp.gmail.com', 587)  # Insira o servidor SMTP e a porta
-    server.starttls() #iniciando uma conexao segura
-    server.login(de_email, senha) #fazendo login
-    texto = msg.as_string()
-    server.sendmail(de_email, destinatario_email, texto)
-    server.quit() #finalizando
-
-    """
-
-
+@app.route('/download/<filename>')
+def download(filename):
+    return send_file(filename, as_attachment=True)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    #app.run(debug=True)
+    app.run(host='0.0.0.0', port=os.environ.get('PORT', 5000))
