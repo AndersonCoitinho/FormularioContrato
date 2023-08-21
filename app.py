@@ -13,6 +13,9 @@ import locale
 from urllib.parse import quote
 from flask import url_for
 
+import boto3
+from botocore.exceptions import NoCredentialsError
+
 
 app = Flask(__name__)
 
@@ -36,18 +39,6 @@ def gerar_docx():
     estado = request.form['estado']
     cep = request.form['cep']
     data_str = request.form['data']
-
-
-
-    pasta_modelos = 'modelos'
-
-    if os.access(pasta_modelos, os.W_OK):
-        print(f'A pasta "{pasta_modelos}" tem permissões de escrita.')
-    else:
-        print(f'A pasta "{pasta_modelos}" não tem permissões de escrita.')
-
-
-
 
 
     ### DATA ###
@@ -183,53 +174,31 @@ def gerar_docx():
     #doc2_path=doc2_path,
     #doc3_path=doc3_path
 #)
-    """
-     # Preparar a resposta para download
-    response = make_response()
 
-    # Adicionar os arquivos DOCX à resposta
-    response.data = doc1_path.read_bytes()
-    response.data += doc2_path.read_bytes()
-    response.data += doc3_path.read_bytes()
+       # Configurar as credenciais do S3
+    AWS_ACCESS_KEY = os.environ['AWS_ACCESS_KEY']
+    AWS_SECRET_KEY = os.environ['AWS_SECRET_KEY']
+    s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
 
-    # Definir os cabeçalhos para os arquivos
-    response.headers['Content-Disposition'] = f'attachment; filename=Documentos_{nome}.zip'
-    response.headers['Content-Type'] = 'application/zip'
+    # Fazer upload dos documentos para o S3
+    def upload_to_s3(local_file, bucket_name, s3_file):
+        try:
+            s3.upload_file(local_file, bucket_name, s3_file)
+            print("Upload realizado com sucesso!")
+            return True
+        except FileNotFoundError:
+            print("O arquivo não foi encontrado.")
+            return False
+        except NoCredentialsError:
+            print("Credenciais do AWS não foram configuradas.")
+            return False
 
-    # Remover os arquivos temporários após o download
-    os.remove(doc1_path)
-    os.remove(doc2_path)
-    os.remove(doc3_path)
-
-    return response
+    # Fazer upload dos documentos para o S3
+    upload_to_s3(doc1_path, 'cadastroadv', f'datas/Contrato_Honorarios_{nome}.docx')
+    upload_to_s3(doc2_path, 'cadastroadv', f'datas/Justica_Gratuita_{nome}.docx')
+    upload_to_s3(doc3_path, 'cadastroadv', f'datas/Procuracao_{nome}.docx')
 
 
-    #response = make_response(send_file(doc1_path, as_attachment=True))
-    #response.headers['Content-Disposition'] = f'attachment; filename=Contrato_Honorarios_{nome}.docx'
-    #response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    
-    #return response
-"""
-    return render_template(
-        'download.html',
-        nome=nome,
-        doc1_path=doc1_path,
-        doc2_path=doc2_path,
-        doc3_path=doc3_path
-    )
-    
-@app.route('/download/<filename>')
-#def download(filename):
-#    return send_file(filename, as_attachment=True)
-def download(filename):
-    if filename == 'doc1':
-        return send_file(doc1_path, as_attachment=True, attachment_filename=f'Contrato_Honorarios_{nome}.docx')
-    elif filename == 'doc2':
-        return send_file(doc2_path, as_attachment=True, attachment_filename=f'Justica_Gratuita_{nome}.docx')
-    elif filename == 'doc3':
-        return send_file(doc3_path, as_attachment=True, attachment_filename=f'Procuracao_{nome}.docx')
-    else:
-        return "Arquivo não encontrado", 404
 
 if __name__ == '__main__':
     #app.run(debug=True)
