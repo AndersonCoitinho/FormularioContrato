@@ -205,6 +205,11 @@ def gerar_docx():
         nome=nome  # Adicione a variável nome ao contexto do template 
     )
 
+@app.route('/download/<filename>', methods=['GET'])
+def download(filename):
+    return send_file(filename, as_attachment=True)
+    
+
 if __name__ == '__main__':
     #app.run(debug=True)
     app.run(host='0.0.0.0', port=os.environ.get('PORT', 5000))
