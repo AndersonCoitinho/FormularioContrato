@@ -40,11 +40,11 @@ def gerar_docx():
 
     ### DATA ###
     # Converter a data em um objeto datetime
-    data = datetime.strptime(data_str, '%Y-%m-%d')
+    #data = datetime.strptime(data_str, '%Y-%m-%d')
     # Definir a localidade para o idioma desejado (por exemplo, 'pt_BR' para Português do Brasil)
-    locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
+    #locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
     # Formatar a data por extenso
-    data_extenso = data.strftime('%d de %B de %Y')  # %d: dia, %B: mês por extenso, %Y: ano
+    #data_extenso = data.strftime('%d de %B de %Y')  # %d: dia, %B: mês por extenso, %Y: ano
 
 
     ### DOC1 = CONTRATO HONORARIOS ###
@@ -79,10 +79,10 @@ def gerar_docx():
                 if '{{estado}}' in cell_text:
                     cell.text = cell_text.replace('{{estado}}', estado)
     
-    for paragraph in doc1.paragraphs: #percorre os paragratos
-        paragraph_text = paragraph.text
-        if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
-            paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
+    #for paragraph in doc1.paragraphs: #percorre os paragratos
+    #    paragraph_text = paragraph.text
+    #    if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
+    #        paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
 
     doc1_path = os.path.join('modelos', f'Contrato Honorarios_{nome}.docx')
     doc1.save(doc1_path)
@@ -118,10 +118,10 @@ def gerar_docx():
                 if '{{estado}}' in cell_text:
                     cell.text = cell_text.replace('{{estado}}', estado)
     
-    for paragraph in doc2.paragraphs: #percorre os paragratos
-        paragraph_text = paragraph.text
-        if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
-            paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
+    #for paragraph in doc2.paragraphs: #percorre os paragratos
+    #    paragraph_text = paragraph.text
+    #    if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
+    #        paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
 
     doc2_path = os.path.join('modelos', f'Justica Gratuita_{nome}.docx')
     doc2.save(doc2_path)
@@ -157,10 +157,10 @@ def gerar_docx():
                 if '{{estado}}' in cell_text:
                     cell.text = cell_text.replace('{{estado}}', estado)
     
-    for paragraph in doc3.paragraphs: #percorre os paragratos
-        paragraph_text = paragraph.text
-        if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
-            paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
+    #for paragraph in doc3.paragraphs: #percorre os paragratos
+    #    paragraph_text = paragraph.text
+    #    if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
+    #        paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
 
     doc3_path = os.path.join('modelos', f'Procuracao_{nome}.docx')
     doc3.save(doc3_path)
