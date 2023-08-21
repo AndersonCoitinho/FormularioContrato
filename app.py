@@ -172,8 +172,7 @@ def gerar_docx():
     #'download.html',
     #doc1_path=doc1_path,
     #doc2_path=doc2_path,
-    #doc3_path=doc3_path
-#)
+    #doc3_path=doc3_path)
 
        # Configurar as credenciais do S3
     AWS_ACCESS_KEY = os.environ['AWS_ACCESS_KEY']
@@ -200,7 +199,6 @@ def gerar_docx():
 
     return render_template(
         'download.html',
-        nome=nome,
         doc1_path=doc1_path,
         doc2_path=doc2_path,
         doc3_path=doc3_path
