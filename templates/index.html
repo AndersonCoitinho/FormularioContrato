@@ -2,16 +2,17 @@
 <html>
 <head>
     <title>Formulário</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
 </head>
 <body>
     <h1>Formulário</h1>
     <form action="/generate_docx" method="post">
         <label for="nome">Nome:</label>
         <input type="text" name="nome" required><br>
-
-        <label for="nascionalidade">Nacionalidade:</label>
-        <input type="text" name="nascionalidade" required><br>
-
+        
+        <label for="nacionalidade">Nacionalidade:</label>
+        <input type="text" name="nacionalidade" required><br>
+        
         <label for="estadoCivil">Estado Civil:</label>
         <input type="text" name="estadoCivil" required><br>
 
@@ -37,11 +38,11 @@
         <input type="text" name="cep" required><br>
 
         <label for="cidade">Cidade:</label>
-        <input type="text" name="cidade" required><br>
+        <input type="text" name="cidade" value="Jaraguá do Sul" required><br>
              
-        <label for="Estado">Estado:</label>
-        <input type="text" name="Estado" required><br>
-
+        <label for="estado">Estado:</label>
+        <input type="text" name="estado" value="Santa Catarina" required><br>
+            
         <label for="data">Data:</label>
         <input type="date" name="data" required><br>
 
