@@ -17,14 +17,18 @@
 
     <a id="voltar-link" href="{{ url_for('index') }}" class="btn btn-secondary">Voltar</a>
 
-        -->
+        
 
     <a id="download-link-1" href="{{ url_for('download', filename=doc1_path) }}" download>Contrato Honorários</a><br>
     <a id="download-link-2" href="{{ url_for('download', filename=doc2_path) }}" download>Justiça Gratuita</a><br>
     <a id="download-link-3" href="{{ url_for('download', filename=doc3_path) }}" download>Procuração</a><br>
 
     <a id="voltar-link" href="{{ url_for('index') }}" class="btn btn-secondary">Voltar</a>
-        
+        -->
+        <a id="download-link-1" href="{{ url_for('download_s3', filename=doc1_filename) }}" download>Contrato Honorários</a><br>
+        <a id="download-link-2" href="{{ url_for('download_s3', filename=doc2_filename) }}" download>Justiça Gratuita</a><br>
+        <a id="download-link-3" href="{{ url_for('download_s3', filename=doc3_filename) }}" download>Procuração</a><br>    
+        <a id="voltar-link" href="{{ url_for('index') }}" class="btn btn-secondary">Voltar</a>
     
 </body>
 

@@ -16,6 +16,9 @@ from flask import url_for
 import boto3
 from botocore.exceptions import NoCredentialsError
 
+from flask import redirect
+
+
 
 app = Flask(__name__)
 
@@ -199,18 +202,17 @@ def gerar_docx():
 
     return render_template(
         'download.html',
-        doc1_path=doc1_path,
-        doc2_path=doc2_path,
-        doc3_path=doc3_path,
+        doc1_filename=f'datas/Contrato_Honorarios_{nome}.docx',
+        doc2_filename=f'datas/Justica_Gratuita_{nome}.docx',
+        doc3_filename=f'datas/Procuracao_{nome}.docx',
         nome=nome  # Adicione a variável nome ao contexto do template 
     )
 
 @app.route('/download/<filename>', methods=['GET'])
 def download(filename):
     #return send_file(filename, as_attachment=True)
-    response = make_response(send_file(filename))
-    response.headers["Content-Disposition"] = f"attachment; filename={filename}"
-    return response
+    s3_url = f"https://cadastroadv.s3.amazonaws.com/datas/{filename}"
+    return redirect(s3_url)
 
 
 if __name__ == '__main__':
