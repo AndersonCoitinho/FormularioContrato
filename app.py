@@ -84,7 +84,7 @@ def gerar_docx():
     #    if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
     #        paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
 
-    doc1_path = os.path.join('modelos', f'Contrato Honorarios_{nome}.docx')
+    doc1_path = os.path.join('modelos', f'Contrato_Honorarios_{nome}.docx')
     doc1.save(doc1_path)
 
     ### DOC2 = JUSTIÇA GRATUIDA ###
@@ -123,7 +123,7 @@ def gerar_docx():
     #    if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
     #        paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
 
-    doc2_path = os.path.join('modelos', f'Justica Gratuita_{nome}.docx')
+    doc2_path = os.path.join('modelos', f'Justica_Gratuita_{nome}.docx')
     doc2.save(doc2_path)
 
     ### DOC3 = PROCURAÇÃO ###
