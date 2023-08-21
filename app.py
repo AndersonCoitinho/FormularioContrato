@@ -171,11 +171,32 @@ def gerar_docx():
     #doc2_path=doc2_path,
     #doc3_path=doc3_path
 #)
-    response = make_response(send_file(doc1_path, as_attachment=True))
-    response.headers['Content-Disposition'] = f'attachment; filename=Contrato_Honorarios_{nome}.docx'
-    response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    
+
+     # Preparar a resposta para download
+    response = make_response()
+
+    # Adicionar os arquivos DOCX à resposta
+    response.data = doc1_path.read_bytes()
+    response.data += doc2_path.read_bytes()
+    response.data += doc3_path.read_bytes()
+
+    # Definir os cabeçalhos para os arquivos
+    response.headers['Content-Disposition'] = f'attachment; filename=Documentos_{nome}.zip'
+    response.headers['Content-Type'] = 'application/zip'
+
+    # Remover os arquivos temporários após o download
+    os.remove(doc1_path)
+    os.remove(doc2_path)
+    os.remove(doc3_path)
+
     return response
+
+
+    #response = make_response(send_file(doc1_path, as_attachment=True))
+    #response.headers['Content-Disposition'] = f'attachment; filename=Contrato_Honorarios_{nome}.docx'
+    #response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    
+    #return response
 
     
 @app.route('/download/<filename>')
