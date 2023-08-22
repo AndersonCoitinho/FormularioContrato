@@ -18,7 +18,9 @@ from botocore.exceptions import NoCredentialsError
 
 from flask import redirect
 
-
+# Configurar as credenciais do S3
+        AWS_ACCESS_KEY = os.environ['AWS_ACCESS_KEY']
+        AWS_SECRET_KEY = os.environ['AWS_SECRET_KEY']
 
 app = Flask(__name__)
 
@@ -171,9 +173,7 @@ def gerar_docx():
         doc3_path = os.path.join('modelos', f'Procuracao_{nome}.docx')
         doc3.save(doc3_path)
 
-        # Configurar as credenciais do S3
-        AWS_ACCESS_KEY = os.environ['AWS_ACCESS_KEY']
-        AWS_SECRET_KEY = os.environ['AWS_SECRET_KEY']
+        
         s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
 
         # Fazer upload dos documentos para o S3
@@ -202,6 +202,7 @@ def gerar_docx():
         return f"Erro: O campo '{e.args[0]}' não foi encontrado nos dados enviados."
     except Exception as e:
         return f"Erro inesperado: {str(e)}"
+
 
 
 @app.route('/downloads')
