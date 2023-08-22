@@ -193,7 +193,30 @@ def gerar_docx():
     upload_to_s3(doc2_path, 'cadastroadv', f'datas/Justica_Gratuita_{nome}.docx')
     upload_to_s3(doc3_path, 'cadastroadv', f'datas/Procuracao_{nome}.docx')
 
-    return redirect('/')
+    # Redirecionar para a página de download
+    return redirect(url_for('download_file', filename=f'Contrato_Honorarios_{nome}.docx'))
+
+    #redireciona para page inicial
+    #return redirect('/')
+
+    # Recupere as variáveis de ambiente do Heroku
+AWS_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY')
+AWS_SECRET_KEY = os.environ.get('AWS_SECRET_KEY')
+
+@app.route('/downloads/<filename>')
+def download_file(filename):
+    s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
+    try:
+        # Gerar uma URL de download temporária para o arquivo no S3
+        url = s3.generate_presigned_url('get_object',
+                                       Params={'Bucket': 'cadastroadv', 'Key': f'datas/{filename}'},
+                                       ExpiresIn=3600)  # URL expira em 1 hora
+
+        return render_template('download.html', download_link=url)  # Renderiza um template com o link de download
+    except NoCredentialsError:
+        return "Credenciais do AWS não foram configuradas."
+
+
 
 if __name__ == '__main__':
     #app.run(debug=True)
