@@ -208,7 +208,7 @@ def gerar_docx():
 
 
 @app.route('/downloads')
-def download_files():
+def download_files(nome):
     s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
     
     filenames = [f'Contrato_Honorarios_{nome}.docx', f'Justica_Gratuita_{nome}.docx', f'Procuracao_{nome}.docx']
