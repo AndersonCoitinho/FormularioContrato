@@ -119,7 +119,7 @@ def gerar_docx():
             if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
                 paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
 
-        doc1_path = os.path.join('modelos', f'Contrato_Honorarios_{nome}.docx')
+        doc1_path = os.path.join('modelos', f'CONTRATO HONORÁRIO - {nome}.docx')
         doc1.save(doc1_path)
 
         ### DOC2 = JUSTIÇA GRATUIDA ###
@@ -158,7 +158,7 @@ def gerar_docx():
             if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
                 paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
 
-        doc2_path = os.path.join('modelos', f'Justica_Gratuita_{nome}.docx')
+        doc2_path = os.path.join('modelos', f'JUSTIÇA GRATUITA - {nome}.docx')
         doc2.save(doc2_path)
 
         ### DOC3 = PROCURAÇÃO ###
@@ -197,7 +197,7 @@ def gerar_docx():
             if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
                 paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
 
-        doc3_path = os.path.join('modelos', f'Procuracao_{nome}.docx')
+        doc3_path = os.path.join('modelos', f'PROCURAÇÃO - {nome}.docx')
         doc3.save(doc3_path)
 
         
@@ -217,9 +217,9 @@ def gerar_docx():
                 return False
 
         # Fazer upload dos documentos para o S3
-        if upload_to_s3(doc1_path, 'cadastroadv', f'datas/Contrato_Honorarios_{nome}.docx') and \
-           upload_to_s3(doc2_path, 'cadastroadv', f'datas/Justica_Gratuita_{nome}.docx') and \
-           upload_to_s3(doc3_path, 'cadastroadv', f'datas/Procuracao_{nome}.docx'):
+        if upload_to_s3(doc1_path, 'cadastroadv', f'datas/CONTRATO HONORÁRIO - {nome}.docx') and \
+           upload_to_s3(doc2_path, 'cadastroadv', f'datas/JUSTIÇA GRATUITA - {nome}.docx') and \
+           upload_to_s3(doc3_path, 'cadastroadv', f'datas/PROCURAÇÃO - {nome}.docx'):
             return redirect(url_for('download_files', nome=nome))
             #return "Documentos gerados e enviados com sucesso!"
         else:
@@ -236,7 +236,7 @@ def gerar_docx():
 def download_files(nome):
     s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
     
-    filenames = [f'Contrato_Honorarios_{nome}.docx', f'Justica_Gratuita_{nome}.docx', f'Procuracao_{nome}.docx']
+    filenames = [f'CONTRATO HONORÁRIO - {nome}.docx', f'JUSTIÇA GRATUITA - {nome}.docx', f'PROCURAÇÃO - {nome}.docx']
     
     download_links = []
     
