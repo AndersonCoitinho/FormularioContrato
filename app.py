@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file, make_response
+from flask import Flask, render_template, request, redirect , make_response
 from docx import Document
 import os
 import smtplib
@@ -193,6 +193,7 @@ def gerar_docx():
     upload_to_s3(doc2_path, 'cadastroadv', f'datas/Justica_Gratuita_{nome}.docx')
     upload_to_s3(doc3_path, 'cadastroadv', f'datas/Procuracao_{nome}.docx')
 
+    return redirect('/')
 
 if __name__ == '__main__':
     #app.run(debug=True)
