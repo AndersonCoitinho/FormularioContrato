@@ -200,32 +200,6 @@ def gerar_docx():
     upload_to_s3(doc2_path, 'cadastroadv', f'datas/Justica_Gratuita_{nome}.docx')
     upload_to_s3(doc3_path, 'cadastroadv', f'datas/Procuracao_{nome}.docx')
 
-    return render_template(
-        'download.html',
-        doc1_filename=f'datas/Contrato_Honorarios_{nome}.docx',
-        doc2_filename=f'datas/Justica_Gratuita_{nome}.docx',
-        doc3_filename=f'datas/Procuracao_{nome}.docx',
-        nome=nome  # Adicione a variável nome ao contexto do template 
-    )
-
-
-@app.route('/download_docx/<filename>', methods=['GET'])
-def download_docx(filename):
-    # Aqui você deve implementar o código para acessar o arquivo na AWS usando as bibliotecas AWS SDK
-    # Supondo que o arquivo esteja na pasta de uploads da AWS
-    # Importe e utilize as bibliotecas da AWS, como boto3, para acessar seus recursos na AWS
-
-    # Por exemplo, usando boto3 para acessar um bucket S3
-    import boto3
-    s3 = boto3.client('s3')
-    bucket_name = 'cadastroadv'
-    file_path = 'https://cadastroadv.s3.amazonaws.com/datas/' + filename
-
-    response = s3.get_object(Bucket=bucket_name, Key=file_path)
-    file_data = response['Body'].read()
-
-    return send_file(file_data, attachment_filename=filename, as_attachment=True)
-
 
 if __name__ == '__main__':
     #app.run(debug=True)
