@@ -207,7 +207,7 @@ AWS_SECRET_KEY = os.environ.get('AWS_SECRET_KEY')
 def download_files():
     s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
     
-    filenames = ['doc1_path', 'doc2_path', 'doc3_path']  # Substitua com seus nomes de arquivos
+    filenames = [doc1_path, doc2_path, doc3_path]  # Substitua com seus nomes de arquivos
     
     download_links = []
     
