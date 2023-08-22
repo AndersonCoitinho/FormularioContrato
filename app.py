@@ -193,8 +193,8 @@ def gerar_docx():
         if upload_to_s3(doc1_path, 'cadastroadv', f'datas/Contrato_Honorarios_{nome}.docx') and \
            upload_to_s3(doc2_path, 'cadastroadv', f'datas/Justica_Gratuita_{nome}.docx') and \
            upload_to_s3(doc3_path, 'cadastroadv', f'datas/Procuracao_{nome}.docx'):
-            #return redirect(url_for('download_files'))
-            return "Documentos gerados e enviados com sucesso!"
+            return redirect(url_for('download_files'))
+            #return "Documentos gerados e enviados com sucesso!"
         else:
             return "Erro ao gerar e/ou enviar os documentos."
 
