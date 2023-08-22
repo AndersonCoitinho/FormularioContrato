@@ -3,7 +3,7 @@
 <head>
     <title>Downloads de Arquivos</title>
 
-    <script>
+    <!--<script>
         // Função para iniciar o download automático dos arquivos
         function startDownloads() {
             var downloadLinks = document.querySelectorAll(".download-link");
@@ -37,6 +37,7 @@
             return parts[parts.length - 1];
         }
     </script>
+-->
 
 </head>
 <body onload="startDownloads()">
@@ -44,12 +45,14 @@
     <ul>
     {% for item in download_links %}
         <li>
-            <!--<p>Arquivo: {{ item.filename }}</p>
-            <a href="{{ item.download_link }}">Baixar Arquivo</a>
-            <a class="download-link" data-download-url="{{ item.download_link }}">Baixar Arquivo</a>-->
-
             <p>Arquivo: {{ item.filename }}</p>
+            <a href="{{ item.download_link }}">Baixar Arquivo</a>
             <a class="download-link" data-download-url="{{ item.download_link }}">Baixar Arquivo</a>
+            
+            
+            <!--
+            <p>Arquivo: {{ item.filename }}</p>
+            <a class="download-link" data-download-url="{{ item.download_link }}">Baixar Arquivo</a>-->
         </li>
         </li>
     {% endfor %}
