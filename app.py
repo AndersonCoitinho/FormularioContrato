@@ -48,14 +48,26 @@ def gerar_docx():
         cep = request.form['cep']
         data_str = request.form['data']
 
+        # Definir a localidade para o idioma desejado (por exemplo, 'pt_BR' para Português do Brasil)
+        try:
+        locale.setlocale(locale.LC_TIME, 'pt_BR.utf-8')
+        except locale.Error:
+        locale.setlocale(locale.LC_TIME, 'pt_BR')
+
+        # Formatar a data por extenso
+        data_extenso = data.strftime('%d de %B de %Y')  # %d: dia, %B: mês por extenso, %Y: ano
 
         ### DATA ###
         # Converter a data em um objeto datetime
-        data = datetime.strptime(data_str, '%Y-%m-%d')
+        #data = datetime.strptime(data_str, '%Y-%m-%d')
         # Definir a localidade para o idioma desejado (por exemplo, 'pt_BR' para Português do Brasil)
-        locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
+        #locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
         # Formatar a data por extenso
-        data_extenso = data.strftime('%d de %B de %Y')  # %d: dia, %B: mês por extenso, %Y: ano
+        #data_extenso = data.strftime('%d de %B de %Y')  # %d: dia, %B: mês por extenso, %Y: ano
+
+        
+
+        
 
 
         ### DOC1 = CONTRATO HONORARIOS ###
@@ -226,91 +238,6 @@ def download_files(nome):
     except NoCredentialsError:
         return "Credenciais do AWS não foram configuradas."
 
-
-"""
-@app.route('/downloads')
-def download_files():
-     return render_template('download.html')
-    
-    s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
-    
-    filenames = [doc1_path, doc2_path, doc3_path]  # Substitua com seus nomes de arquivos
-    
-    download_links = []
-    
-    try:
-        for filename in filenames:
-            url = s3.generate_presigned_url('get_object',
-                                           Params={'Bucket': 'cadastroadv', 'Key': f'datas/{filename}'},
-                                           ExpiresIn=3600)
-            download_links.append({'filename': filename, 'download_link': url})
-            
-        return render_template('download.html', download_links=download_links)
-    except NoCredentialsError:
-        return "Credenciais do AWS não foram configuradas."
-
-
-@app.route('/downloads/<filename>')
-def download_file(filename):
-    s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
-    try:
-        # Gerar uma URL de download temporária para o arquivo no S3
-        url = s3.generate_presigned_url('get_object',
-                                       Params={'Bucket': 'cadastroadv', 'Key': f'datas/{filename}'},
-                                       ExpiresIn=3600)  # URL expira em 1 hora
-
-        return render_template('download.html', download_link=url)  # Renderiza um template com o link de download
-    except NoCredentialsError:
-        return "Credenciais do AWS não foram configuradas."
-
-
-
-@app.route('/download/contrato/<filename>')
-def download_contrato(filename):
-    s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
-    s3_file_path = f'datas/{filename}'
-    
-    try:
-        response = s3.get_object(Bucket='cadastroadv', Key=s3_file_path)
-        data = response['Body'].read()
-
-        response = make_response(data)
-        response.headers["Content-Disposition"] = f"attachment; filename={filename}"
-        return response
-    except:
-        return "Arquivo não encontrado.", 404
-
-@app.route('/download/justicagratuita/<filename>')
-def download_justicagratuita(filename):
-    s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
-    s3_file_path = f'datas/{filename}'
-    
-    try:
-        response = s3.get_object(Bucket='cadastroadv', Key=s3_file_path)
-        data = response['Body'].read()
-
-        response = make_response(data)
-        response.headers["Content-Disposition"] = f"attachment; filename={filename}"
-        return response
-    except:
-        return "Arquivo não encontrado.", 404
-
-@app.route('/download/procuracao/<filename>')
-def download_procuracao(filename):
-    s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
-    s3_file_path = f'datas/{filename}'
-    
-    try:
-        response = s3.get_object(Bucket='cadastroadv', Key=s3_file_path)
-        data = response['Body'].read()
-
-        response = make_response(data)
-        response.headers["Content-Disposition"] = f"attachment; filename={filename}"
-        return response
-    except:
-        return "Arquivo não encontrado.", 404
-    
-"""
 
 if __name__ == '__main__':
     #app.run(debug=True)
