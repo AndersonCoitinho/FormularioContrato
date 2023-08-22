@@ -202,7 +202,7 @@ def gerar_docx():
     # Recupere as variáveis de ambiente do Heroku
 AWS_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY')
 AWS_SECRET_KEY = os.environ.get('AWS_SECRET_KEY')
-
+"""
 @app.route('/downloads/<filename>')
 def download_file(filename):
     s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
@@ -215,7 +215,53 @@ def download_file(filename):
         return render_template('download.html', download_link=url)  # Renderiza um template com o link de download
     except NoCredentialsError:
         return "Credenciais do AWS não foram configuradas."
+"""
 
+@app.route('/download/contrato/<filename>')
+def download_contrato(filename):
+    s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
+    s3_file_path = f'datas/{filename}'
+    
+    try:
+        response = s3.get_object(Bucket='cadastroadv', Key=s3_file_path)
+        data = response['Body'].read()
+
+        response = make_response(data)
+        response.headers["Content-Disposition"] = f"attachment; filename={filename}"
+        return response
+    except:
+        return "Arquivo não encontrado.", 404
+
+@app.route('/download/justicagratuita/<filename>')
+def download_justicagratuita(filename):
+    s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
+    s3_file_path = f'datas/{filename}'
+    
+    try:
+        response = s3.get_object(Bucket='cadastroadv', Key=s3_file_path)
+        data = response['Body'].read()
+
+        response = make_response(data)
+        response.headers["Content-Disposition"] = f"attachment; filename={filename}"
+        return response
+    except:
+        return "Arquivo não encontrado.", 404
+
+@app.route('/download/procuracao/<filename>')
+def download_procuracao(filename):
+    s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
+    s3_file_path = f'datas/{filename}'
+    
+    try:
+        response = s3.get_object(Bucket='cadastroadv', Key=s3_file_path)
+        data = response['Body'].read()
+
+        response = make_response(data)
+        response.headers["Content-Disposition"] = f"attachment; filename={filename}"
+        return response
+    except:
+        return "Arquivo não encontrado.", 404
+    
 
 
 if __name__ == '__main__':
