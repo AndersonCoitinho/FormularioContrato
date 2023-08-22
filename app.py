@@ -33,19 +33,19 @@ AWS_SECRET_KEY = os.environ['AWS_SECRET_KEY']
 @app.route('/generate_docx', methods=['POST'])
 def gerar_docx():
     try:
-        nome = request.form['nome']
-        nacionalidade = request.form['nacionalidade']
-        estadoCivil = request.form['estadoCivil']
-        profissao = request.form['profissao']
-        fone = request.form['fone']
-        cpf = request.form['cpf']
-        rg = request.form['rg']
-        endereco = request.form['endereco']
-        bairro = request.form['bairro']
-        cep = request.form['cep']
-        cidade = request.form['cidade']
-        estado = request.form['estado']
-        cep = request.form['cep']
+        nome = request.form['nome'].upper()
+        nacionalidade = request.form['nacionalidade'].upper()
+        estadoCivil = request.form['estadoCivil'].upper()
+        profissao = request.form['profissao'].upper()
+        fone = request.form['fone'].upper()
+        cpf = request.form['cpf'].upper()
+        rg = request.form['rg'].upper()
+        endereco = request.form['endereco'].upper()
+        bairro = request.form['bairro'].upper()
+        cep = request.form['cep'].upper()
+        cidade = request.form['cidade'].upper()
+        estado = request.form['estado'].upper()
+        cep = request.form['cep'].upper()
         data_str = request.form['data']
 
         # Definir a localidade para o idioma desejado (por exemplo, 'pt_BR' para Português do Brasil)
@@ -153,10 +153,10 @@ def gerar_docx():
                     if '{{estado}}' in cell_text:
                         cell.text = cell_text.replace('{{estado}}', estado)
         
-        #for paragraph in doc2.paragraphs: #percorre os paragratos
-        #    paragraph_text = paragraph.text
-        #    if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
-        #        paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
+        for paragraph in doc2.paragraphs: #percorre os paragratos
+            paragraph_text = paragraph.text
+            if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
+                paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
 
         doc2_path = os.path.join('modelos', f'Justica_Gratuita_{nome}.docx')
         doc2.save(doc2_path)
@@ -192,10 +192,10 @@ def gerar_docx():
                     if '{{estado}}' in cell_text:
                         cell.text = cell_text.replace('{{estado}}', estado)
         
-        #for paragraph in doc3.paragraphs: #percorre os paragratos
-        #    paragraph_text = paragraph.text
-        #    if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
-        #        paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
+        for paragraph in doc3.paragraphs: #percorre os paragratos
+            paragraph_text = paragraph.text
+            if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
+                paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
 
         doc3_path = os.path.join('modelos', f'Procuracao_{nome}.docx')
         doc3.save(doc3_path)
