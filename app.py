@@ -195,7 +195,7 @@ def gerar_docx():
         if upload_to_s3(doc1_path, 'cadastroadv', f'datas/Contrato_Honorarios_{nome}.docx') and \
            upload_to_s3(doc2_path, 'cadastroadv', f'datas/Justica_Gratuita_{nome}.docx') and \
            upload_to_s3(doc3_path, 'cadastroadv', f'datas/Procuracao_{nome}.docx'):
-            return redirect(url_for('download_files'))
+            return redirect(url_for('download_files', nome=nome))
             #return "Documentos gerados e enviados com sucesso!"
         else:
             return "Erro ao gerar e/ou enviar os documentos."
@@ -207,7 +207,7 @@ def gerar_docx():
 
 
 
-@app.route('/downloads')
+@app.route('/downloads/<nome>')
 def download_files(nome):
     s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
     
