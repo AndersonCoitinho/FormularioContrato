@@ -55,7 +55,6 @@ def gerar_docx():
 
     ### DOC1 = CONTRATO HONORARIOS ###
     doc1 = Document('./modelos/contratoHonorarios.docx') # Substitua 'modelo.docx' pelo caminho do seu modelo DOCX
-
     for table in doc1.tables: #percorrendo todas as tabelas
         for row in table.rows: #percorrendo todas as linhas
             for cell in row.cells: #percorrendo todas as cedulas 
@@ -171,13 +170,7 @@ def gerar_docx():
     doc3_path = os.path.join('modelos', f'Procuracao_{nome}.docx')
     doc3.save(doc3_path)
 
-    #return render_template(
-    #'download.html',
-    #doc1_path=doc1_path,
-    #doc2_path=doc2_path,
-    #doc3_path=doc3_path)
-
-       # Configurar as credenciais do S3
+    # Configurar as credenciais do S3
     AWS_ACCESS_KEY = os.environ['AWS_ACCESS_KEY']
     AWS_SECRET_KEY = os.environ['AWS_SECRET_KEY']
     s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
