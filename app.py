@@ -62,16 +62,13 @@ def gerar_docx():
 
         ### DATA ###
         # Converter a data em um objeto datetime
-        #data = datetime.strptime(data_str, '%Y-%m-%d')
+        data = datetime.strptime(data_str, '%Y-%m-%d')
         # Definir a localidade para o idioma desejado (por exemplo, 'pt_BR' para Português do Brasil)
-        #locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
+        locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
         # Formatar a data por extenso
-        #data_extenso = data.strftime('%d de %B de %Y')  # %d: dia, %B: mês por extenso, %Y: ano
+        data_extenso = data.strftime('%d de %B de %Y')  # %d: dia, %B: mês por extenso, %Y: ano
 
-        
-
-        
-
+    
 
         ### DOC1 = CONTRATO HONORARIOS ###
         doc1 = Document('./modelos/contratoHonorarios.docx') # Substitua 'modelo.docx' pelo caminho do seu modelo DOCX
@@ -107,7 +104,7 @@ def gerar_docx():
         for paragraph in doc1.paragraphs: #percorre os paragratos
             paragraph_text = paragraph.text
             if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
-                paragraph.text = paragraph_text.replace('{{data}}', data_str)
+                paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
 
         doc1_path = os.path.join('modelos', f'Contrato_Honorarios_{nome}.docx')
         doc1.save(doc1_path)
