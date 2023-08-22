@@ -52,7 +52,10 @@ def gerar_docx():
         try:
             locale.setlocale(locale.LC_TIME, 'pt_BR.utf-8')
         except locale.Error:
-            locale.setlocale(locale.LC_TIME, 'pt_BR')
+            try:
+                locale.setlocale(locale.LC_TIME, 'pt_BR.UTF-8')
+            except locale.Error:
+            locale.setlocale(locale.LC_TIME, 'en_US.utf-8')
 
         # Formatar a data por extenso
         data_extenso = data.strftime('%d de %B de %Y')  # %d: dia, %B: mês por extenso, %Y: ano
