@@ -63,8 +63,21 @@ def gerar_docx():
         ### DATA ###
         # Converter a data em um objeto datetime
         data = datetime.strptime(data_str, '%Y-%m-%d')
+
         # Definir a localidade para o idioma desejado (por exemplo, 'pt_BR' para Português do Brasil)
-        locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
+        try:
+            locale.setlocale(locale.LC_TIME, 'pt_BR.UTF-8')
+        except locale.Error:
+            try:
+                locale.setlocale(locale.LC_TIME, 'pt_BR')
+            except locale.Error:
+                try:
+                    locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
+                except locale.Error:
+                    locale.setlocale(locale.LC_TIME, 'en_US.UTF-8')
+
+        # Definir a localidade para o idioma desejado (por exemplo, 'pt_BR' para Português do Brasil)
+        #locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
         # Formatar a data por extenso
         data_extenso = data.strftime('%d de %B de %Y')  # %d: dia, %B: mês por extenso, %Y: ano
 
