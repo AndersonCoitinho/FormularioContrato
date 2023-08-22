@@ -4,16 +4,6 @@
     <title>Downloads de Arquivos</title>
 
     <script>
-        // Função para simular clique no link de download
-        function downloadFile(url) {
-            var link = document.createElement("a");
-            link.href = url;
-            link.download = true;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
         // Função para iniciar o download automático dos arquivos
         function startDownloads() {
             var downloadLinks = document.querySelectorAll(".download-link");
@@ -21,6 +11,30 @@
                 var downloadURL = link.getAttribute("data-download-url");
                 downloadFile(downloadURL);
             });
+        }
+
+        // Função para fazer o download do arquivo
+        function downloadFile(url) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            xhr.responseType = "blob";
+            xhr.onload = function() {
+                var blob = xhr.response;
+                var link = document.createElement("a");
+                link.href = window.URL.createObjectURL(blob);
+                link.download = getFilenameFromURL(url);
+                link.style.display = "none";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+            xhr.send();
+        }
+
+        // Função para obter o nome do arquivo a partir da URL
+        function getFilenameFromURL(url) {
+            var parts = url.split("/");
+            return parts[parts.length - 1];
         }
     </script>
 
@@ -30,9 +44,13 @@
     <ul>
     {% for item in download_links %}
         <li>
+            <!--<p>Arquivo: {{ item.filename }}</p>
+            <a href="{{ item.download_link }}">Baixar Arquivo</a>
+            <a class="download-link" data-download-url="{{ item.download_link }}">Baixar Arquivo</a>-->
+
             <p>Arquivo: {{ item.filename }}</p>
-            <!--<a href="{{ item.download_link }}">Baixar Arquivo</a>-->
             <a class="download-link" data-download-url="{{ item.download_link }}">Baixar Arquivo</a>
+        </li>
         </li>
     {% endfor %}
     </ul>
