@@ -203,6 +203,27 @@ def gerar_docx():
     except Exception as e:
         return f"Erro inesperado: {str(e)}"
 
+
+@app.route('/downloads')
+def download_files():
+    s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
+    
+    filenames = [f'Contrato_Honorarios_{nome}.docx', f'Justica_Gratuita_{nome}.docx', f'Procuracao_{nome}.docx']
+    
+    download_links = []
+    
+    try:
+        for filename in filenames:
+            url = s3.generate_presigned_url('get_object',
+                                           Params={'Bucket': 'cadastroadv', 'Key': f'datas/{filename}'},
+                                           ExpiresIn=3600)
+            download_links.append({'filename': filename, 'download_link': url})
+            
+        return render_template('download.html', download_links=download_links)
+    except NoCredentialsError:
+        return "Credenciais do AWS não foram configuradas."
+
+
 """
 @app.route('/downloads')
 def download_files():
