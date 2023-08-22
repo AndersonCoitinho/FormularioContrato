@@ -107,7 +107,7 @@ def gerar_docx():
         for paragraph in doc1.paragraphs: #percorre os paragratos
             paragraph_text = paragraph.text
             if '{{data}}' in paragraph_text: #encontrando {{data}} substitui
-                paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
+                paragraph.text = paragraph_text.replace('{{data}}', data)
 
         doc1_path = os.path.join('modelos', f'Contrato_Honorarios_{nome}.docx')
         doc1.save(doc1_path)
