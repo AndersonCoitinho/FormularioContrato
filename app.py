@@ -224,7 +224,7 @@ def download_files():
     except NoCredentialsError:
         return "Credenciais do AWS não foram configuradas."
 
-"""
+
 @app.route('/downloads/<filename>')
 def download_file(filename):
     s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
