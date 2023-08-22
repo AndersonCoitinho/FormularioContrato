@@ -2,14 +2,37 @@
 <html>
 <head>
     <title>Downloads de Arquivos</title>
+
+    <script>
+        // Função para simular clique no link de download
+        function downloadFile(url) {
+            var link = document.createElement("a");
+            link.href = url;
+            link.download = true;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Função para iniciar o download automático dos arquivos
+        function startDownloads() {
+            var downloadLinks = document.querySelectorAll(".download-link");
+            downloadLinks.forEach(function(link) {
+                var downloadURL = link.getAttribute("data-download-url");
+                downloadFile(downloadURL);
+            });
+        }
+    </script>
+
 </head>
-<body>
+<body onload="startDownloads()">
     <h1>Downloads de Arquivos</h1>
     <ul>
     {% for item in download_links %}
         <li>
             <p>Arquivo: {{ item.filename }}</p>
-            <a href="{{ item.download_link }}">Baixar Arquivo</a>
+            <!--<a href="{{ item.download_link }}">Baixar Arquivo</a>-->
+            <a class="download-link" data-download-url="{{ item.download_link }}">Baixar Arquivo</a>
         </li>
     {% endfor %}
     </ul>
