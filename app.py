@@ -205,6 +205,8 @@ def gerar_docx():
 
 @app.route('/downloads')
 def download_files():
+     return render_template('download.html')
+    """
     s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
     
     filenames = [doc1_path, doc2_path, doc3_path]  # Substitua com seus nomes de arquivos
