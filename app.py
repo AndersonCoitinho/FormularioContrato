@@ -18,15 +18,17 @@ from botocore.exceptions import NoCredentialsError
 
 from flask import redirect
 
-# Configurar as credenciais do S3
-        AWS_ACCESS_KEY = os.environ['AWS_ACCESS_KEY']
-        AWS_SECRET_KEY = os.environ['AWS_SECRET_KEY']
+
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
+# Configurar as credenciais do S3
+AWS_ACCESS_KEY = os.environ['AWS_ACCESS_KEY']
+AWS_SECRET_KEY = os.environ['AWS_SECRET_KEY']
 
 @app.route('/generate_docx', methods=['POST'])
 def gerar_docx():
