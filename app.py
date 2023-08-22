@@ -193,7 +193,7 @@ def gerar_docx():
         if upload_to_s3(doc1_path, 'cadastroadv', f'datas/Contrato_Honorarios_{nome}.docx') and \
            upload_to_s3(doc2_path, 'cadastroadv', f'datas/Justica_Gratuita_{nome}.docx') and \
            upload_to_s3(doc3_path, 'cadastroadv', f'datas/Procuracao_{nome}.docx'):
-            return "Documentos gerados e enviados com sucesso!"
+            return redirect(url_for('download_files'))
         else:
             return "Erro ao gerar e/ou enviar os documentos."
 
@@ -202,11 +202,6 @@ def gerar_docx():
     except Exception as e:
         return f"Erro inesperado: {str(e)}"
 
-        # Redirecionar para a página de download
-        #return redirect(url_for('download_file', filename=f'Contrato_Honorarios_{nome}.docx'))
-
-        #redireciona para page inicial
-        #return redirect('/')
 
 @app.route('/downloads')
 def download_files():
