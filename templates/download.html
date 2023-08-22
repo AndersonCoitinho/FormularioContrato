@@ -1,23 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Download</title>
+    <title>Downloads de Arquivos</title>
 </head>
 <body>
-    <h1>Download do Arquivo</h1>
-    <p>Clique no link abaixo para fazer o download do arquivo:</p>
-    <a href="{{ download_link }}" download>Download</a>
-
-    <h2>Contrato de Honorários</h2>
-    <a href="{{ url_for('download_contrato', filename='Contrato_Honorarios_NOME.docx') }}" download>
-        Download do Contrato</a>
-
-    <h2>Justiça Gratuita</h2>
-    <a href="{{ url_for('download_justicagratuita', filename='Justica_Gratuita_NOME.docx') }}" download>
-        Download do Formulário de Justiça Gratuita</a>
-
-    <h2>Procuração</h2>
-    <a href="{{ url_for('download_procuracao', filename='Procuracao_NOME.docx') }}" download>
-        Download da Procuração</a>
+    <h1>Downloads de Arquivos</h1>
+    <ul>
+    {% for item in download_links %}
+        <li>
+            <p>Arquivo: {{ item.filename }}</p>
+            <a href="{{ item.download_link }}">Baixar Arquivo</a>
+        </li>
+    {% endfor %}
+    </ul>
 </body>
 </html>

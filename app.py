@@ -202,6 +202,26 @@ def gerar_docx():
     # Recupere as variáveis de ambiente do Heroku
 AWS_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY')
 AWS_SECRET_KEY = os.environ.get('AWS_SECRET_KEY')
+
+@app.route('/downloads')
+def download_files():
+    s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
+    
+    filenames = ['doc1_path', 'doc2_path', 'doc3_path']  # Substitua com seus nomes de arquivos
+    
+    download_links = []
+    
+    try:
+        for filename in filenames:
+            url = s3.generate_presigned_url('get_object',
+                                           Params={'Bucket': 'cadastroadv', 'Key': f'datas/{filename}'},
+                                           ExpiresIn=3600)
+            download_links.append({'filename': filename, 'download_link': url})
+            
+        return render_template('download.html', download_links=download_links)
+    except NoCredentialsError:
+        return "Credenciais do AWS não foram configuradas."
+
 """
 @app.route('/downloads/<filename>')
 def download_file(filename):
@@ -215,7 +235,8 @@ def download_file(filename):
         return render_template('download.html', download_link=url)  # Renderiza um template com o link de download
     except NoCredentialsError:
         return "Credenciais do AWS não foram configuradas."
-"""
+
+
 
 @app.route('/download/contrato/<filename>')
 def download_contrato(filename):
@@ -262,7 +283,7 @@ def download_procuracao(filename):
     except:
         return "Arquivo não encontrado.", 404
     
-
+"""
 
 if __name__ == '__main__':
     #app.run(debug=True)
