@@ -194,14 +194,10 @@ def gerar_docx():
     upload_to_s3(doc3_path, 'cadastroadv', f'datas/Procuracao_{nome}.docx')
 
     # Redirecionar para a página de download
-    return redirect(url_for('download_file', filename=f'Contrato_Honorarios_{nome}.docx'))
+    #return redirect(url_for('download_file', filename=f'Contrato_Honorarios_{nome}.docx'))
 
     #redireciona para page inicial
     #return redirect('/')
-
-    # Recupere as variáveis de ambiente do Heroku
-AWS_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY')
-AWS_SECRET_KEY = os.environ.get('AWS_SECRET_KEY')
 
 @app.route('/downloads')
 def download_files():
