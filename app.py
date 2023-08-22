@@ -193,7 +193,8 @@ def gerar_docx():
         if upload_to_s3(doc1_path, 'cadastroadv', f'datas/Contrato_Honorarios_{nome}.docx') and \
            upload_to_s3(doc2_path, 'cadastroadv', f'datas/Justica_Gratuita_{nome}.docx') and \
            upload_to_s3(doc3_path, 'cadastroadv', f'datas/Procuracao_{nome}.docx'):
-            return redirect(url_for('download_files'))
+            #return redirect(url_for('download_files'))
+            return "Documentos gerados e enviados com sucesso!"
         else:
             return "Erro ao gerar e/ou enviar os documentos."
 
@@ -202,11 +203,11 @@ def gerar_docx():
     except Exception as e:
         return f"Erro inesperado: {str(e)}"
 
-
+"""
 @app.route('/downloads')
 def download_files():
      return render_template('download.html')
-    """
+    
     s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
     
     filenames = [doc1_path, doc2_path, doc3_path]  # Substitua com seus nomes de arquivos
