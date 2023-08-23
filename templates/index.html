@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Formulário</title>
     <link rel="stylesheet" type="text/css" href="../static/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
 </head>
+
 <body>
     <h1>Formulário</h1>
     <form action="/generate_docx" method="post">
         <label for="nome">Nome:</label>
         <input type="text" name="nome" required><br>
-        
+
         <label for="nacionalidade">Nacionalidade:</label>
         <input type="text" name="nacionalidade" value="Brasileiro(a)" required><br>
-        
+
         <label for="estadoCivil">Estado Civil:</label>
         <input type="text" name="estadoCivil" required><br>
 
@@ -22,47 +24,92 @@
         <input type="text" name="profissao" required><br>
 
         <label for="fone">Fone:</label>
-        <input type="text" name="fone" required><br>
+        <input type="text" name="fone" required maxlength="15" oninput="formatarTelefone(this)">
 
         <label for="fone">Fone Recado:</label>
-        <input type="text" name="fone_recado"><br>
+        <input type="text" name="fone_recado" maxlength="15" oninput="formatarTelefone(this)"><br>
 
         <label for="cpf">CPF:</label>
-        <input type="text" name="cpf" required><br>
-        
-        <input type="text" class="form-control cpf-mask" placeholder="Ex.: 000.000.000-00">
+        <input type="text" name="cpf" required maxlength="14" oninput="formatarCPF(this)"><br>
 
         <label for="rg">RG:</label>
         <input type="text" name="rg" required><br>
 
         <label for="endereco">Endereço:</label>
         <input type="text" name="endereco" required><br>
-             
+
         <label for="bairro">Bairro:</label>
         <input type="text" name="bairro" required><br>
 
         <label for="cep">CEP:</label>
-        <input type="text" name="cep" required><br>
+        <input type="text" name="cep" required maxlength="10" oninput="formatarCEP(this)"><br>
 
         <label for="cidade">Cidade:</label>
         <input type="text" name="cidade" required><br>
-             
+
         <label for="estado">Estado:</label>
         <input type="text" name="estado" required><br>
-            
+
         <label for="data">Data:</label>
         <input type="date" name="data" required><br>
 
         <button type="submit">Mágica</button>
     </form>
 
-    <script>
-        $(document).ready(function () {
-            alert("jQuery e inputmask estão carregados!");
-            $('#cpf').inputmask('999.999.999-99');
-        });
-    </script>
-
-
 </body>
+<script>
+    /* function formatar(mascara, documento) {
+         let i = documento.value.length;
+         let saida = '#';
+         let texto = mascara.substring(i);
+         while (texto.substring(0, 1) != saida && texto.length) {
+             documento.value += texto.substring(0, 1);
+             i++;
+             texto = mascara.substring(i);
+         }
+     }*/
+
+    function formatarTelefone(input) {
+        let value = input.value;
+        // Remove tudo exceto números
+        value = value.replace(/\D/g, '');
+
+        // Formatação do telefone
+        if (value.length <= 10) {
+            value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+        } else {
+            value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+        }
+
+        input.value = value;
+    }
+
+    function formatarCPF(input) {
+        let value = input.value;
+        // Remove tudo exceto números
+        value = value.replace(/\D/g, '');
+
+        // Formatação do CPF
+        value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+
+        input.value = value;
+    }
+
+    function formatarCEP(input) {
+        let value = input.value;
+        // Remove tudo exceto números
+        value = value.replace(/\D/g, '');
+
+
+        // Formatação do CEP
+        if (value.length = 5) {
+            value = value.replace(/(\d{2})(\d{3})(\d{3})/, '$1.$2-$3');
+        } else {
+            value = value.replace(/(\d{2})(\d{3})/, '$1.$2');
+        }
+
+        input.value = value;
+    }
+</script>
+
 </html>

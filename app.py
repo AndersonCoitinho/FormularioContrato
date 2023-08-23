@@ -27,8 +27,11 @@ def index():
     return render_template('index.html')
 
 # Configurar as credenciais do S3
-AWS_ACCESS_KEY = os.environ['AWS_ACCESS_KEY']
-AWS_SECRET_KEY = os.environ['AWS_SECRET_KEY']
+#AWS_ACCESS_KEY = os.environ['AWS_ACCESS_KEY']
+#AWS_SECRET_KEY = os.environ['AWS_SECRET_KEY']
+
+AWS_ACCESS_KEY = "AKIAYGU4WWO6VQB4AQUO"
+AWS_SECRET_KEY = "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"
 
 @app.route('/generate_docx', methods=['POST'])
 def gerar_docx():
