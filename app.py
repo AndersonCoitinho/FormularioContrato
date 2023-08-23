@@ -48,21 +48,21 @@ def gerar_docx():
         cep = request.form['cep'].upper()
         data_str = request.form['data']
 
-    # Mapeando meses em inglês para português
-    meses_em_portugues = {
-        'January': 'Janeiro',
-        'February': 'Fevereiro',
-        'March': 'Março',
-        'April': 'Abril',
-        'May': 'Maio',
-        'June': 'Junho',
-        'July': 'Julho',
-        'August': 'Agosto',
-        'September': 'Setembro',
-        'October': 'Outubro',
-        'November': 'Novembro',
-        'December': 'Dezembro'
-    }
+        # Mapeando meses em inglês para português
+        meses_em_portugues = {
+            'January': 'Janeiro',
+            'February': 'Fevereiro',
+            'March': 'Março',
+            'April': 'Abril',
+            'May': 'Maio',
+            'June': 'Junho',
+            'July': 'Julho',
+            'August': 'Agosto',
+            'September': 'Setembro',
+            'October': 'Outubro',
+            'November': 'Novembro',
+            'December': 'Dezembro'
+        }
 
         # Definir a localidade para o idioma desejado (por exemplo, 'pt_BR' para Português do Brasil)
         #try:
