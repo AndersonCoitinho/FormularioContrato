@@ -38,6 +38,7 @@ def gerar_docx():
         estadoCivil = request.form['estadoCivil'].upper()
         profissao = request.form['profissao'].upper()
         fone = request.form['fone'].upper()
+        fone_recado = request.form['fone_recado'].upper()
         cpf = request.form['cpf'].upper()
         rg = request.form['rg'].upper()
         endereco = request.form['endereco'].upper()
@@ -115,7 +116,7 @@ def gerar_docx():
                     if '{{profissao}}' in cell_text:
                         cell.text = cell_text.replace('{{profissao}}', profissao)
                     if '{{fone}}' in cell_text:
-                        cell.text = cell_text.replace('{{fone}}', fone)
+                        cell.text = cell_text.replace('{{fone}}', fone f'ou {fone_recado}')
                     if '{{cpf}}' in cell_text:
                         cell.text = cell_text.replace('{{cpf}}', cpf)
                     if '{{rg}}' in cell_text:
