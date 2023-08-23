@@ -48,6 +48,22 @@ def gerar_docx():
         cep = request.form['cep'].upper()
         data_str = request.form['data']
 
+    # Mapeando meses em inglês para português
+    meses_em_portugues = {
+        'January': 'Janeiro',
+        'February': 'Fevereiro',
+        'March': 'Março',
+        'April': 'Abril',
+        'May': 'Maio',
+        'June': 'Junho',
+        'July': 'Julho',
+        'August': 'Agosto',
+        'September': 'Setembro',
+        'October': 'Outubro',
+        'November': 'Novembro',
+        'December': 'Dezembro'
+    }
+
         # Definir a localidade para o idioma desejado (por exemplo, 'pt_BR' para Português do Brasil)
         #try:
         #    locale.setlocale(locale.LC_TIME, 'pt_BR.utf-8')
@@ -80,7 +96,8 @@ def gerar_docx():
         #locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
         # Formatar a data por extenso
         data_extenso = data.strftime('%d de %B de %Y')  # %d: dia, %B: mês por extenso, %Y: ano
-
+        for mes_ingles, mes_portugues in meses_em_portugues.items():
+            data_extenso = data_extenso.replace(mes_ingles, mes_portugues)
     
 
         ### DOC1 = CONTRATO HONORARIOS ###
