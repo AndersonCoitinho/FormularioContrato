@@ -116,7 +116,10 @@ def gerar_docx():
                     if '{{profissao}}' in cell_text:
                         cell.text = cell_text.replace('{{profissao}}', profissao)
                     if '{{fone}}' in cell_text:
-                        cell.text = cell_text.replace('{{fone}}', fone)
+                        if fone_recado:
+                            cell.text = cell_text.replace('{{fone}}', fone + f' ou {fone_recado}')
+                        else:
+                            cell.text = cell_text.replace('{{fone}}', fone)
                     if '{{cpf}}' in cell_text:
                         cell.text = cell_text.replace('{{cpf}}', cpf)
                     if '{{rg}}' in cell_text:
