@@ -67,6 +67,7 @@ button[type="submit"]:hover {
         width: 100%; /* Ocupa a largura total */
         display: block;
         margin-bottom: 10px;
+        color: red;
     }
 
     input[type="text"], input[type="date"] {
