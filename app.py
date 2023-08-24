@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect , make_response
+from __future__ import print_function
+from flask import Flask, render_template, request, redirect, make_response, session
 from docx import Document
 import os
 import smtplib
@@ -6,32 +7,53 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
 import zipfile
-
 from datetime import datetime
 import locale
-
 from urllib.parse import quote
 from flask import url_for
-
 import boto3
 from botocore.exceptions import NoCredentialsError
-
-from flask import redirect
-
-
+import os.path
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from utils.date_utils import format_data_extenso
+from utils.upload_s3 import upload_to_s3
 
 app = Flask(__name__)
+
+# Configurações de autenticação
+CLIENT_ID = '21396251954-qecpo27snbi1mvihktvq8ve9lu7h3ohk.apps.googleusercontent.com'
+CLIENT_SECRET = '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'
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Configurar as credenciais do S3
-#AWS_ACCESS_KEY = os.environ['AWS_ACCESS_KEY']
-#AWS_SECRET_KEY = os.environ['AWS_SECRET_KEY']
 
 AWS_ACCESS_KEY = "AKIAYGU4WWO6VQB4AQUO"
 AWS_SECRET_KEY = "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"
+
+"""
+def update_spreadsheet_values(service, spreadsheet_id, range_name, values):
+    try:
+        result = service.spreadsheets().values().update(
+            spreadsheetId=spreadsheet_id,
+            range=range_name,
+            valueInputOption="USER_ENTERED",
+            body={"values": values}
+        ).execute()
+
+        return True  # Indica sucesso na atualização
+    except HttpError as err:
+        print(f"Erro ao atualizar a planilha: {err}")
+        return False  # Indica falha na atualização
+"""
+
 
 @app.route('/generate_docx', methods=['POST'])
 def gerar_docx():
@@ -52,57 +74,9 @@ def gerar_docx():
         cep = request.form['cep'].upper()
         data_str = request.form['data']
 
-        # Mapeando meses em inglês para português
-        meses_em_portugues = {
-            'January': 'Janeiro',
-            'February': 'Fevereiro',
-            'March': 'Março',
-            'April': 'Abril',
-            'May': 'Maio',
-            'June': 'Junho',
-            'July': 'Julho',
-            'August': 'Agosto',
-            'September': 'Setembro',
-            'October': 'Outubro',
-            'November': 'Novembro',
-            'December': 'Dezembro'
-        }
-
-        # Definir a localidade para o idioma desejado (por exemplo, 'pt_BR' para Português do Brasil)
-        #try:
-        #    locale.setlocale(locale.LC_TIME, 'pt_BR.utf-8')
-        #except locale.Error:
-        #    try:
-        #        locale.setlocale(locale.LC_TIME, 'pt_BR.UTF-8')
-        #    except locale.Error:
-        #    locale.setlocale(locale.LC_TIME, 'en_US.utf-8')
-
-        # Formatar a data por extenso
-        #data_extenso = data.strftime('%d de %B de %Y')  # %d: dia, %B: mês por extenso, %Y: ano
-
-        ### DATA ###
-        # Converter a data em um objeto datetime
-        data = datetime.strptime(data_str, '%Y-%m-%d')
-
-        # Definir a localidade para o idioma desejado (por exemplo, 'pt_BR' para Português do Brasil)
-        try:
-            locale.setlocale(locale.LC_TIME, 'pt_BR.UTF-8')
-        except locale.Error:
-            try:
-                locale.setlocale(locale.LC_TIME, 'pt_BR')
-            except locale.Error:
-                try:
-                    locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
-                except locale.Error:
-                    locale.setlocale(locale.LC_TIME, 'en_US.UTF-8')
-
-        # Definir a localidade para o idioma desejado (por exemplo, 'pt_BR' para Português do Brasil)
-        #locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
-        # Formatar a data por extenso
-        data_extenso = data.strftime('%d de %B de %Y')  # %d: dia, %B: mês por extenso, %Y: ano
-        for mes_ingles, mes_portugues in meses_em_portugues.items():
-            data_extenso = data_extenso.replace(mes_ingles, mes_portugues)
-    
+        # Chamando a função format_data_extenso para obter a data por extenso
+        data_extenso = format_data_extenso(data_str)
+        
 
         ### DOC1 = CONTRATO HONORARIOS ###
         doc1 = Document('./modelos/contratoHonorarios.docx') # Substitua 'modelo.docx' pelo caminho do seu modelo DOCX
@@ -161,7 +135,10 @@ def gerar_docx():
                     if '{{profissao}}' in cell_text:
                         cell.text = cell_text.replace('{{profissao}}', profissao)
                     if '{{fone}}' in cell_text:
-                        cell.text = cell_text.replace('{{fone}}', fone)
+                        if fone_recado:
+                            cell.text = cell_text.replace('{{fone}}', fone + f' ou {fone_recado}')
+                        else:
+                            cell.text = cell_text.replace('{{fone}}', fone)
                     if '{{cpf}}' in cell_text:
                         cell.text = cell_text.replace('{{cpf}}', cpf)
                     if '{{rg}}' in cell_text:
@@ -200,7 +177,10 @@ def gerar_docx():
                     if '{{profissao}}' in cell_text:
                         cell.text = cell_text.replace('{{profissao}}', profissao)
                     if '{{fone}}' in cell_text:
-                        cell.text = cell_text.replace('{{fone}}', fone)
+                        if fone_recado:
+                            cell.text = cell_text.replace('{{fone}}', fone + f' ou {fone_recado}')
+                        else:
+                            cell.text = cell_text.replace('{{fone}}', fone)
                     if '{{cpf}}' in cell_text:
                         cell.text = cell_text.replace('{{cpf}}', cpf)
                     if '{{rg}}' in cell_text:
@@ -223,32 +203,78 @@ def gerar_docx():
 
         doc3_path = os.path.join('modelos', f'PROCURAÇÃO - {nome}.docx')
         doc3.save(doc3_path)
-
-        
-        s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
-
-        # Fazer upload dos documentos para o S3
-        def upload_to_s3(local_file, bucket_name, s3_file):
-            try:
-                s3.upload_file(local_file, bucket_name, s3_file)
-                print("Upload realizado com sucesso!")
-                return True
-            except FileNotFoundError:
-                print("O arquivo não foi encontrado.")
-                return False
-            except NoCredentialsError:
-                print("Credenciais do AWS não foram configuradas.")
-                return False
+       
 
         # Fazer upload dos documentos para o S3
         if upload_to_s3(doc1_path, 'cadastroadv', f'datas/CONTRATO HONORÁRIO - {nome}.docx') and \
            upload_to_s3(doc2_path, 'cadastroadv', f'datas/JUSTIÇA GRATUITA - {nome}.docx') and \
            upload_to_s3(doc3_path, 'cadastroadv', f'datas/PROCURAÇÃO - {nome}.docx'):
-            return redirect(url_for('download_files', nome=nome))
-            #return "Documentos gerados e enviados com sucesso!"
+           return redirect(url_for('download_files', nome=nome))
+          #return "Documentos gerados e enviados com sucesso!"
         else:
             return "Erro ao gerar e/ou enviar os documentos."
+        
+            
+        """
+            try:
+                    update_result = update_spreadsheet_values(
+                        service,  # Passe a instância do serviço do Google Sheets aqui
+                        "1nBhothHfyCnMgj7egotQapYXlNqXRPoseur1idUY9eE",  # ID da planilha
+                        "page!A15",  # Intervalo onde deseja atualizar os valores
+                        valores_adicionar  # Valores a serem adicionados
+                    )
+                    if update_result:
+                        return redirect(url_for('download_files', nome=nome))
+                    else:
+                        return "Erro ao gerar e/ou enviar os documentos."
+            except Exception as e:
+                return f"Erro inesperado na atualização da planilha: {str(e)}"
+            else:
+                return "Erro ao gerar e/ou enviar os documentos."
 
+
+        
+        creds = None #credencial vazio
+
+        if os.path.exists('token.json'): #se existe o token.json
+            creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+
+
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token: # se ja foi atualizado manual ele vai permitir sempre
+                creds.refresh(Request())
+            else:
+                flow = InstalledAppFlow.from_client_secrets_file('client_secret.json', SCOPES)
+                creds = flow.run_local_server(port=0)
+            # Save the credentials for the next run
+            with open('token.json', 'w') as token:
+                token.write(creds.to_json())
+
+        try:
+            service = build('sheets', 'v4', credentials=creds) #conectando no google sheet
+
+                # Call the Sheets API
+            sheet = service.spreadsheets()
+            result = sheet.values().get(spreadsheetId="1nBhothHfyCnMgj7egotQapYXlNqXRPoseur1idUY9eE",
+                                            range="page!A1:B3").execute()
+                
+                #utilizado para pegar valores
+                #values = result.get('values', []) #pega os valores
+                #print(values)
+
+                #utilizar para inserir valores
+            valores_adicionar = [
+            [nome, nacionalidade, estadoCivil, profissao],
+            ]
+
+            return sheet.values().update(spreadsheetId="1nBhothHfyCnMgj7egotQapYXlNqXRPoseur1idUY9eE",
+                                            range="page!a15", valueInputOption="USER_ENTERED", body={"values": valores_adicionar}).execute()
+        
+        except HttpError as err:
+            return print(err) 
+
+        """
+    
     except KeyError as e:
         return f"Erro: O campo '{e.args[0]}' não foi encontrado nos dados enviados."
     except Exception as e:
@@ -259,7 +285,7 @@ def gerar_docx():
 @app.route('/downloads/<nome>')
 def download_files(nome):
     s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
-    
+
     filenames = [f'CONTRATO HONORÁRIO - {nome}.docx', f'JUSTIÇA GRATUITA - {nome}.docx', f'PROCURAÇÃO - {nome}.docx']
     
     download_links = []
@@ -274,6 +300,7 @@ def download_files(nome):
         return render_template('download.html', download_links=download_links)
     except NoCredentialsError:
         return "Credenciais do AWS não foram configuradas."
+
 
 
 if __name__ == '__main__':
