@@ -245,35 +245,32 @@ def gerar_docx():
         ### DOC5 = Minuta Auxilio Acidente Federal ###
         doc5 = Document('./modelos/minutaAuxilioAcidenteFederal.docx')
 
-        for paragraph in doc5.paragraphs:
+        for paragraph in doc5.paragraphs: #percorre os paragratos
             paragraph_text = paragraph.text
-            if '{{nome}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{nome}}', nome)
+            if '{{nome}}' in paragraph_text: #se encontrar {{NOME}}
+                paragraph.text = paragraph_text.replace('{{nome}}', nome) #vai inserir o valor do usuario
             if '{{nacionalidade}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{nacionalidade}}', nacionalidade)
+                paragraph.text = paragraph_text.replace('{{nacionalidade}}', nacionalidade)
             if '{{estadoCivil}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{estadoCivil}}', estadoCivil)
+                paragraph.text = paragraph_text.replace('{{estadoCivil}}', estadoCivil)
             if '{{profissao}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{profissao}}', profissao)
+                paragraph.text = paragraph_text.replace('{{profissao}}', profissao)
             if '{{cpf}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{cpf}}', cpf)
+                paragraph.text = paragraph_text.replace('{{cpf}}', cpf)
             if '{{rg}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{rg}}', rg)
+                paragraph.text = paragraph_text.replace('{{rg}}', rg)
             if '{{endereco}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{endereco}}', endereco)
+                paragraph.text = paragraph_text.replace('{{endereco}}', endereco)
             if '{{bairro}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{bairro}}', bairro)
-            if '{{cidade}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{cidade}}', cidade)
-            if '{{estado}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{estado}}', estado)
+                paragraph.text = paragraph_text.replace('{{bairro}}', bairro)
             if '{{cep}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{cep}}', cep)
+                paragraph.text = paragraph_text.replace('{{cep}}', cep)
+            if '{{cidade}}' in paragraph_text:
+                paragraph.text = paragraph_text.replace('{{cidade}}', cidade)
+            if '{{estado}}' in paragraph_text:
+                paragraph.text = paragraph_text.replace('{{estado}}', estado)
             if '{{data}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{data}}', data_extenso)
-
-            # Atribuir o texto modificado de volta ao parágrafo
-            paragraph.text = paragraph_text
+                paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
 
         doc5_path = os.path.join('modelos', f'MINUTA AUXILIO ACIDENTE FEDERAL - {nome}.docx')
         doc5.save(doc5_path)
@@ -281,36 +278,32 @@ def gerar_docx():
 
         ### DOC6 = Requerimento Adm Auxilio Acidente ###
         doc6 = Document('./modelos/requerimentoAdmAuxilioAcidente.docx')
-
-        for paragraph in doc6.paragraphs:
+        for paragraph in doc6.paragraphs: #percorre os paragratos
             paragraph_text = paragraph.text
-            if '{{nome}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{nome}}', nome)
-            if '{{nacionalidade}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{nacionalidade}}', nacionalidade)
-            if '{{estadoCivil}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{estadoCivil}}', estadoCivil)
-            if '{{profissao}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{profissao}}', profissao)
-            if '{{cpf}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{cpf}}', cpf)
-            if '{{rg}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{rg}}', rg)
-            if '{{endereco}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{endereco}}', endereco)
-            if '{{bairro}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{bairro}}', bairro)
-            if '{{cidade}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{cidade}}', cidade)
-            if '{{estado}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{estado}}', estado)
-            if '{{cep}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{cep}}', cep)
+            if '{{nome}}' in cell_text: #se encontrar {{NOME}}
+                cell.text = cell_text.replace('{{nome}}', nome) #vai inserir o valor do usuario
+            if '{{nacionalidade}}' in cell_text:
+                cell.text = cell_text.replace('{{nacionalidade}}', nacionalidade)
+            if '{{estadoCivil}}' in cell_text:
+                cell.text = cell_text.replace('{{estadoCivil}}', estadoCivil)
+            if '{{profissao}}' in cell_text:
+                cell.text = cell_text.replace('{{profissao}}', profissao)
+            if '{{cpf}}' in cell_text:
+                cell.text = cell_text.replace('{{cpf}}', cpf)
+            if '{{rg}}' in cell_text:
+                cell.text = cell_text.replace('{{rg}}', rg)
+            if '{{endereco}}' in cell_text:
+                cell.text = cell_text.replace('{{endereco}}', endereco)
+            if '{{bairro}}' in cell_text:
+                cell.text = cell_text.replace('{{bairro}}', bairro)
+            if '{{cep}}' in cell_text:
+                cell.text = cell_text.replace('{{cep}}', cep)
+            if '{{cidade}}' in cell_text:
+                cell.text = cell_text.replace('{{cidade}}', cidade)
+            if '{{estado}}' in cell_text:
+                cell.text = cell_text.replace('{{estado}}', estado)
             if '{{data}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{data}}', data_extenso)
-
-            # Atribuir o texto modificado de volta ao parágrafo
-            paragraph.text = paragraph_text
+                paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
 
         doc6_path = os.path.join('modelos', f'REQUERIMENTO ADMINISTRATIVO AUXILIO ACIDENTE - {nome}.docx')
         doc6.save(doc6_path)
