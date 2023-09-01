@@ -14,11 +14,11 @@ from flask import url_for
 import boto3
 from botocore.exceptions import NoCredentialsError
 import os.path
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
+#from google.auth.transport.requests import Request
+#from google.oauth2.credentials import Credentials
+#from google_auth_oauthlib.flow import InstalledAppFlow
+#from googleapiclient.discovery import build
+#from googleapiclient.errors import HttpError
 from utils.date_utils import format_data_extenso
 from utils.upload_s3 import upload_to_s3
 
@@ -456,7 +456,7 @@ def gerar_docx():
         else:
             return f"Erro ao gerar e/ou enviar os documentos."
 
-            
+
     except KeyError as e:
         return f"Erro: O campo '{e.args[0]}' não foi encontrado nos dados enviados."
     except Exception as e:
