@@ -1,4 +1,4 @@
-from __future__ import print_function
+from _future_ import print_function
 from flask import Flask, render_template, request, redirect, make_response, session
 from docx import Document
 import os
@@ -14,15 +14,15 @@ from flask import url_for
 import boto3
 from botocore.exceptions import NoCredentialsError
 import os.path
-#from google.auth.transport.requests import Request
-#from google.oauth2.credentials import Credentials
-#from google_auth_oauthlib.flow import InstalledAppFlow
-#from googleapiclient.discovery import build
-#from googleapiclient.errors import HttpError
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 from utils.date_utils import format_data_extenso
 from utils.upload_s3 import upload_to_s3
 
-app = Flask(__name__)
+app = Flask(_name_)
 
 # Configurações de autenticação
 CLIENT_ID = '21396251954-qecpo27snbi1mvihktvq8ve9lu7h3ohk.apps.googleusercontent.com'
@@ -38,7 +38,7 @@ def index():
 AWS_ACCESS_KEY = "AKIAYGU4WWO6VQB4AQUO"
 AWS_SECRET_KEY = "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"
 
-"""
+
 def update_spreadsheet_values(service, spreadsheet_id, range_name, values):
     try:
         result = service.spreadsheets().values().update(
@@ -52,7 +52,22 @@ def update_spreadsheet_values(service, spreadsheet_id, range_name, values):
     except HttpError as err:
         print(f"Erro ao atualizar a planilha: {err}")
         return False  # Indica falha na atualização
-"""
+    
+
+
+def find_last_filled_row(sheet):
+    result = sheet.values().get(
+        spreadsheetId="1nBhothHfyCnMgj7egotQapYXlNqXRPoseur1idUY9eE",
+        range="page!A:A"  # Altere para a coluna onde você tem os dados (ex: A:A para coluna A)
+    ).execute()
+    
+    values = result.get('values', [])
+    
+    if values:
+        return len(values) + 1  # Próxima linha vazia
+    else:
+        return 1  # Começar da primeira linha se não houver dados
+
 
 
 @app.route('/generate_docx', methods=['POST'])
@@ -241,73 +256,179 @@ def gerar_docx():
         doc4_path = os.path.join('modelos', f'CAPA DO PROCESSO - {nome}.docx')
         doc4.save(doc4_path)
 
-
         ### DOC5 = Minuta Auxilio Acidente Federal ###
         doc5 = Document('./modelos/minutaAuxilioAcidenteFederal.docx')
-
-        for paragraph in doc5.paragraphs: #percorre os paragratos
+        for paragraph in doc5.paragraphs:
             paragraph_text = paragraph.text
-            if '{{nome}}' in paragraph_text: #se encontrar {{NOME}}
-                paragraph.text = paragraph_text.replace('{{nome}}', nome) #vai inserir o valor do usuario
+            if '{{nome}}' in paragraph_text:
+                paragraph_text = paragraph_text.replace('{{nome}}', nome)
             if '{{nacionalidade}}' in paragraph_text:
-                paragraph.text = paragraph_text.replace('{{nacionalidade}}', nacionalidade)
+                paragraph_text = paragraph_text.replace('{{nacionalidade}}', nacionalidade)
             if '{{estadoCivil}}' in paragraph_text:
-                paragraph.text = paragraph_text.replace('{{estadoCivil}}', estadoCivil)
+                paragraph_text = paragraph_text.replace('{{estadoCivil}}', estadoCivil)
             if '{{profissao}}' in paragraph_text:
-                paragraph.text = paragraph_text.replace('{{profissao}}', profissao)
+                paragraph_text = paragraph_text.replace('{{profissao}}', profissao)
             if '{{cpf}}' in paragraph_text:
-                paragraph.text = paragraph_text.replace('{{cpf}}', cpf)
+                paragraph_text = paragraph_text.replace('{{cpf}}', cpf)
             if '{{rg}}' in paragraph_text:
-                paragraph.text = paragraph_text.replace('{{rg}}', rg)
+                paragraph_text = paragraph_text.replace('{{rg}}', rg)
             if '{{endereco}}' in paragraph_text:
-                paragraph.text = paragraph_text.replace('{{endereco}}', endereco)
+                paragraph_text = paragraph_text.replace('{{endereco}}', endereco)
             if '{{bairro}}' in paragraph_text:
-                paragraph.text = paragraph_text.replace('{{bairro}}', bairro)
-            if '{{cep}}' in paragraph_text:
-                paragraph.text = paragraph_text.replace('{{cep}}', cep)
+                paragraph_text = paragraph_text.replace('{{bairro}}', bairro)
             if '{{cidade}}' in paragraph_text:
-                paragraph.text = paragraph_text.replace('{{cidade}}', cidade)
+                paragraph_text = paragraph_text.replace('{{cidade}}', cidade)
             if '{{estado}}' in paragraph_text:
-                paragraph.text = paragraph_text.replace('{{estado}}', estado)
+                paragraph_text = paragraph_text.replace('{{estado}}', estado)
+            if '{{cep}}' in paragraph_text:
+                paragraph_text = paragraph_text.replace('{{cep}}', cep)
             if '{{data}}' in paragraph_text:
-                paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
+                paragraph_text = paragraph_text.replace('{{data}}', data_extenso)
+
+            # Atribuir o texto modificado de volta ao parágrafo
+            paragraph.text = paragraph_text
 
         doc5_path = os.path.join('modelos', f'MINUTA AUXILIO ACIDENTE FEDERAL - {nome}.docx')
         doc5.save(doc5_path)
 
-
         ### DOC6 = Requerimento Adm Auxilio Acidente ###
         doc6 = Document('./modelos/requerimentoAdmAuxilioAcidente.docx')
-        for paragraph in doc6.paragraphs: #percorre os paragratos
+        for paragraph in doc6.paragraphs:
             paragraph_text = paragraph.text
-            if '{{nome}}' in cell_text: #se encontrar {{NOME}}
-                cell.text = cell_text.replace('{{nome}}', nome) #vai inserir o valor do usuario
-            if '{{nacionalidade}}' in cell_text:
-                cell.text = cell_text.replace('{{nacionalidade}}', nacionalidade)
-            if '{{estadoCivil}}' in cell_text:
-                cell.text = cell_text.replace('{{estadoCivil}}', estadoCivil)
-            if '{{profissao}}' in cell_text:
-                cell.text = cell_text.replace('{{profissao}}', profissao)
-            if '{{cpf}}' in cell_text:
-                cell.text = cell_text.replace('{{cpf}}', cpf)
-            if '{{rg}}' in cell_text:
-                cell.text = cell_text.replace('{{rg}}', rg)
-            if '{{endereco}}' in cell_text:
-                cell.text = cell_text.replace('{{endereco}}', endereco)
-            if '{{bairro}}' in cell_text:
-                cell.text = cell_text.replace('{{bairro}}', bairro)
-            if '{{cep}}' in cell_text:
-                cell.text = cell_text.replace('{{cep}}', cep)
-            if '{{cidade}}' in cell_text:
-                cell.text = cell_text.replace('{{cidade}}', cidade)
-            if '{{estado}}' in cell_text:
-                cell.text = cell_text.replace('{{estado}}', estado)
+            if '{{nome}}' in paragraph_text:
+                paragraph_text = paragraph_text.replace('{{nome}}', nome)
+            if '{{nacionalidade}}' in paragraph_text:
+                paragraph_text = paragraph_text.replace('{{nacionalidade}}', nacionalidade)
+            if '{{estadoCivil}}' in paragraph_text:
+                paragraph_text = paragraph_text.replace('{{estadoCivil}}', estadoCivil)
+            if '{{profissao}}' in paragraph_text:
+                paragraph_text = paragraph_text.replace('{{profissao}}', profissao)
+            if '{{cpf}}' in paragraph_text:
+                paragraph_text = paragraph_text.replace('{{cpf}}', cpf)
+            if '{{rg}}' in paragraph_text:
+                paragraph_text = paragraph_text.replace('{{rg}}', rg)
+            if '{{endereco}}' in paragraph_text:
+                paragraph_text = paragraph_text.replace('{{endereco}}', endereco)
+            if '{{bairro}}' in paragraph_text:
+                paragraph_text = paragraph_text.replace('{{bairro}}', bairro)
+            if '{{cidade}}' in paragraph_text:
+                paragraph_text = paragraph_text.replace('{{cidade}}', cidade)
+            if '{{estado}}' in paragraph_text:
+                paragraph_text = paragraph_text.replace('{{estado}}', estado)
+            if '{{cep}}' in paragraph_text:
+                paragraph_text = paragraph_text.replace('{{cep}}', cep)
             if '{{data}}' in paragraph_text:
-                paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
+                paragraph_text = paragraph_text.replace('{{data}}', data_extenso)
+
+            # Atribuir o texto modificado de volta ao parágrafo
+            paragraph.text = paragraph_text
 
         doc6_path = os.path.join('modelos', f'REQUERIMENTO ADMINISTRATIVO AUXILIO ACIDENTE - {nome}.docx')
         doc6.save(doc6_path)
 
+        # Construir a lista de valores a serem adicionados
+        valores_adicionar = [
+            [nome, nacionalidade, estadoCivil, profissao],
+        ]
+
+        try:
+            creds = None  # Inicializa a variável 'creds' como None
+
+            service = build('sheets', 'v4', credentials=creds)
+            
+
+            # Conectar com a planilha
+            sheet = service.spreadsheets()
+
+            # Encontrar a próxima linha vazia
+            next_row = find_last_filled_row(sheet)
+
+            # Construir o intervalo da próxima linha vazia
+            range_next_row = f"page!A{next_row}"
+
+            # Atualizar os valores na próxima linha vazia
+            update_result = sheet.values().update(
+                spreadsheetId="1nBhothHfyCnMgj7egotQapYXlNqXRPoseur1idUY9eE",
+                range=range_next_row,
+                valueInputOption="USER_ENTERED",
+                body={"values": valores_adicionar}
+            ).execute()
+
+            if update_result:
+                # Fazer upload dos documentos para o S3
+                if upload_to_s3(doc1_path, 'cadastroadv', f'datas/CONTRATO HONORÁRIO - {nome}.docx') and \
+                   upload_to_s3(doc2_path, 'cadastroadv', f'datas/JUSTIÇA GRATUITA - {nome}.docx') and \
+                   upload_to_s3(doc3_path, 'cadastroadv', f'datas/PROCURAÇÃO - {nome}.docx') and \
+                   upload_to_s3(doc4_path, 'cadastroadv', f'datas/CAPA DO PROCESSO - {nome}.docx') and \
+                   upload_to_s3(doc5_path, 'cadastroadv', f'datas/MINUTA AUXILIO ACIDENTE FEDERAL - {nome}.docx') and \
+                   upload_to_s3(doc6_path, 'cadastroadv', f'datas/REQUERIMENTO ADMINISTRATIVO AUXILIO ACIDENTE - {nome}.docx'):
+                    return redirect(url_for('download_files', nome=nome))
+                else:
+                    return "Erro ao gerar e/ou enviar os documentos."
+            else:
+                return "Erro ao gerar e/ou enviar os documentos."
+            
+        except Exception as e:
+            return f"Erro inesperado na atualização da planilha: {str(e)}"
+
+
+        """
+        # Fazer upload dos documentos para o S3
+        s3_upload_success = upload_to_s3(doc1_path, 'cadastroadv', f'datas/CONTRATO HONORÁRIO - {nome}.docx') and \
+                            upload_to_s3(doc2_path, 'cadastroadv', f'datas/JUSTIÇA GRATUITA - {nome}.docx') and \
+                            upload_to_s3(doc3_path, 'cadastroadv', f'datas/PROCURAÇÃO - {nome}.docx') and \
+                            upload_to_s3(doc4_path, 'cadastroadv', f'datas/CAPA DO PROCESSO - {nome}.docx') and \
+                            upload_to_s3(doc5_path, 'cadastroadv', f'datas/MINUTA AUXILIO ACIDENTE FEDERAL - {nome}.docx') and \
+                            upload_to_s3(doc6_path, 'cadastroadv', f'datas/REQUERIMENTO ADMINISTRATIVO AUXILIO ACIDENTE - {nome}.docx')
+
+        if s3_upload_success:
+            creds = None  # Inicializa a variável 'creds' como None
+            
+            if os.path.exists('token.json'):
+                creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+            
+            if not creds or not creds.valid:
+                if creds and creds.expired and creds.refresh_token:
+                    creds.refresh(Request())
+                else:
+                    flow = InstalledAppFlow.from_client_secrets_file('client_secret.json', SCOPES)
+                    creds = flow.run_local_server(port=0)
+                    
+                with open('token.json', 'w') as token:
+                    token.write(creds.to_json())
+
+            try:
+                service = build('sheets', 'v4', credentials=creds)
+
+                # Call the Sheets API
+                sheet = service.spreadsheets()
+                valores_adicionar = [
+                    [nome, nacionalidade, estadoCivil, profissao],
+                ]
+
+                update_result = sheet.values().update(
+                    spreadsheetId="1nBhothHfyCnMgj7egotQapYXlNqXRPoseur1idUY9eE",
+                    range="page!A16",
+                    valueInputOption="USER_ENTERED",
+                    body={"values": valores_adicionar}
+                ).execute()
+
+                if update_result:
+                    return redirect(url_for('download_files', nome=nome))
+                else:
+                    return "Erro ao gerar e/ou enviar os documentos."
+            except Exception as e:
+                return f"Erro inesperado na atualização da planilha: {str(e)}"
+
+        else:
+            return "Erro ao gerar e/ou enviar os documentos."
+        
+        
+
+
+        
+        service = build('sheets', 'v4', credentials=creds)  # Conectando ao Google Sheets
+        
         # Fazer upload dos documentos para o S3
         if upload_to_s3(doc1_path, 'cadastroadv', f'datas/CONTRATO HONORÁRIO - {nome}.docx') and \
            upload_to_s3(doc2_path, 'cadastroadv', f'datas/JUSTIÇA GRATUITA - {nome}.docx') and \
@@ -315,13 +436,14 @@ def gerar_docx():
            upload_to_s3(doc4_path, 'cadastroadv', f'datas/CAPA DO PROCESSO - {nome}.docx') and \
            upload_to_s3(doc5_path, 'cadastroadv', f'datas/MINUTA AUXILIO ACIDENTE FEDERAL - {nome}.docx') and \
            upload_to_s3(doc6_path, 'cadastroadv', f'datas/REQUERIMENTO ADMINISTRATIVO AUXILIO ACIDENTE - {nome}.docx'):
-           return redirect(url_for('download_files', nome=nome))
-          #return "Documentos gerados e enviados com sucesso!"
-        else:
-            return "Erro ao gerar e/ou enviar os documentos."
-        
+           
+            return redirect(url_for('download_files', nome=nome))
+            #return "Documentos gerados e enviados com sucesso!"
+            else:
+                return "Erro ao gerar e/ou enviar os documentos."
             
-        """
+            
+        
             try:
                     update_result = update_spreadsheet_values(
                         service,  # Passe a instância do serviço do Google Sheets aqui
@@ -374,12 +496,12 @@ def gerar_docx():
             ]
 
             return sheet.values().update(spreadsheetId="1nBhothHfyCnMgj7egotQapYXlNqXRPoseur1idUY9eE",
-                                            range="page!a15", valueInputOption="USER_ENTERED", body={"values": valores_adicionar}).execute()
+                                            range="page!a35", valueInputOption="USER_ENTERED", body={"values": valores_adicionar}).execute()
         
         except HttpError as err:
             return print(err) 
-
-        """
+            """
+        
     
     except KeyError as e:
         return f"Erro: O campo '{e.args[0]}' não foi encontrado nos dados enviados."
@@ -415,6 +537,6 @@ def download_files(nome):
 
 
 
-if __name__ == '__main__':
+if _name_ == '_main_':
     #app.run(debug=True)
     app.run(host='0.0.0.0', port=os.environ.get('PORT', 5000))

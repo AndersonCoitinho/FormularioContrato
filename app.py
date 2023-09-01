@@ -14,19 +14,17 @@ from flask import url_for
 import boto3
 from botocore.exceptions import NoCredentialsError
 import os.path
-#from google.auth.transport.requests import Request
-#from google.oauth2.credentials import Credentials
-#from google_auth_oauthlib.flow import InstalledAppFlow
-#from googleapiclient.discovery import build
-#from googleapiclient.errors import HttpError
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 from utils.date_utils import format_data_extenso
 from utils.upload_s3 import upload_to_s3
 
 app = Flask(__name__)
 
 # Configurações de autenticação
-CLIENT_ID = '21396251954-qecpo27snbi1mvihktvq8ve9lu7h3ohk.apps.googleusercontent.com'
-CLIENT_SECRET = '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'
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 
@@ -37,22 +35,6 @@ def index():
 
 AWS_ACCESS_KEY = "AKIAYGU4WWO6VQB4AQUO"
 AWS_SECRET_KEY = "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"
-
-"""
-def update_spreadsheet_values(service, spreadsheet_id, range_name, values):
-    try:
-        result = service.spreadsheets().values().update(
-            spreadsheetId=spreadsheet_id,
-            range=range_name,
-            valueInputOption="USER_ENTERED",
-            body={"values": values}
-        ).execute()
-
-        return True  # Indica sucesso na atualização
-    except HttpError as err:
-        print(f"Erro ao atualizar a planilha: {err}")
-        return False  # Indica falha na atualização
-"""
 
 
 @app.route('/generate_docx', methods=['POST'])
@@ -244,13 +226,13 @@ def gerar_docx():
 
         ### DOC5 = Minuta Auxilio Acidente Federal ###
         doc5 = Document('./modelos/minutaAuxilioAcidenteFederal.docx')
-
+           
         for paragraph in doc5.paragraphs:
             paragraph_text = paragraph.text
             if '{{nome}}' in paragraph_text:
                 paragraph_text = paragraph_text.replace('{{nome}}', nome)
             if '{{nacionalidade}}' in paragraph_text:
-                paragraph_text = paragraph_text.replace('{{nacionalidade}}', nacionalidade)
+                paragraph_text = paragraph_text.replace('{{nacionalidade}}', nacionalidade) 
             if '{{estadoCivil}}' in paragraph_text:
                 paragraph_text = paragraph_text.replace('{{estadoCivil}}', estadoCivil)
             if '{{profissao}}' in paragraph_text:
@@ -271,7 +253,7 @@ def gerar_docx():
                 paragraph_text = paragraph_text.replace('{{cep}}', cep)
             if '{{data}}' in paragraph_text:
                 paragraph_text = paragraph_text.replace('{{data}}', data_extenso)
-
+   
             # Atribuir o texto modificado de volta ao parágrafo
             paragraph.text = paragraph_text
 
@@ -315,6 +297,7 @@ def gerar_docx():
         doc6_path = os.path.join('modelos', f'REQUERIMENTO ADMINISTRATIVO AUXILIO ACIDENTE - {nome}.docx')
         doc6.save(doc6_path)
 
+        """
         # Fazer upload dos documentos para o S3
         if upload_to_s3(doc1_path, 'cadastroadv', f'datas/CONTRATO HONORÁRIO - {nome}.docx') and \
            upload_to_s3(doc2_path, 'cadastroadv', f'datas/JUSTIÇA GRATUITA - {nome}.docx') and \
@@ -328,7 +311,7 @@ def gerar_docx():
             return "Erro ao gerar e/ou enviar os documentos."
         
             
-        """
+        
             try:
                     update_result = update_spreadsheet_values(
                         service,  # Passe a instância do serviço do Google Sheets aqui
@@ -385,8 +368,85 @@ def gerar_docx():
         
         except HttpError as err:
             return print(err) 
-
         """
+        
+        # Fazer upload dos documentos para o S3
+        s3_upload_success = upload_to_s3(doc1_path, 'cadastroadv', f'datas/CONTRATO HONORÁRIO - {nome}.docx') and \
+                            upload_to_s3(doc2_path, 'cadastroadv', f'datas/JUSTIÇA GRATUITA - {nome}.docx') and \
+                            upload_to_s3(doc3_path, 'cadastroadv', f'datas/PROCURAÇÃO - {nome}.docx') and \
+                            upload_to_s3(doc4_path, 'cadastroadv', f'datas/CAPA DO PROCESSO - {nome}.docx') and \
+                            upload_to_s3(doc5_path, 'cadastroadv', f'datas/MINUTA AUXILIO ACIDENTE FEDERAL - {nome}.docx') and \
+                            upload_to_s3(doc6_path, 'cadastroadv', f'datas/REQUERIMENTO ADMINISTRATIVO AUXILIO ACIDENTE - {nome}.docx')
+
+        if s3_upload_success:
+            
+            creds = None  # Inicializa a variável 'creds' como None
+            
+            if os.path.exists('token.json'):
+                creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+            
+            if not creds or not creds.valid:
+                if creds and creds.expired and creds.refresh_token:
+                    creds.refresh(Request())
+                else:
+                    # Atualize a URL de redirecionamento aqui
+                    flow = InstalledAppFlow.from_client_secrets_file('client_secret.json', SCOPES, 
+                                                                     redirect_uri='https://conversordocx-b549802ec5d8.herokuapp.com')
+                    creds = flow.run_local_server(port=0)
+ 
+                    
+                with open('token.json', 'w') as token:
+                    token.write(creds.to_json())
+            
+            try:
+                service = build('sheets', 'v4', credentials=creds)
+
+                # Call the Sheets API
+                sheet = service.spreadsheets()
+
+                #Encontre a última linha preenchida
+                result = sheet.values().get(
+                    spreadsheetId="1nBhothHfyCnMgj7egotQapYXlNqXRPoseur1idUY9eE",
+                    range="page!D:D",  # Coluna onde você quer verificar a última linha preenchida
+                ).execute()
+                
+
+                values = result.get('values', [])
+                last_filled_row = len(values) + 1  # Próxima linha vazia
+
+                valores_adicionar = [
+                    [
+                    nome, 
+                    estadoCivil, 
+                    profissao, 
+                    fone, 
+                    fone_recado, 
+                    cpf, 
+                    rg, 
+                    endereco, 
+                    bairro, 
+                    cidade, 
+                    estado, 
+                    cep
+                    ],
+                ]
+
+                update_result = sheet.values().update(
+                    spreadsheetId="1nBhothHfyCnMgj7egotQapYXlNqXRPoseur1idUY9eE",
+                    range=f"page!D{last_filled_row}",
+                    valueInputOption="USER_ENTERED",
+                    body={"values": valores_adicionar}
+                ).execute()
+
+                if update_result:
+                    return redirect(url_for('download_files', nome=nome))
+                else:
+                    return "Erro ao gerar e/ou enviar os documentos."
+            except Exception as e:
+                return f"Erro inesperado na atualização da planilha: {str(e)}"
+
+        else:
+            return f"Erro ao gerar e/ou enviar os documentos."
     
     except KeyError as e:
         return f"Erro: O campo '{e.args[0]}' não foi encontrado nos dados enviados."
