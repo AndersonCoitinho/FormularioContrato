@@ -310,8 +310,6 @@ def gerar_docx():
         else:
             return "Erro ao gerar e/ou enviar os documentos."
         
-            
-        
             try:
                     update_result = update_spreadsheet_values(
                         service,  # Passe a instância do serviço do Google Sheets aqui
@@ -327,14 +325,11 @@ def gerar_docx():
                 return f"Erro inesperado na atualização da planilha: {str(e)}"
             else:
                 return "Erro ao gerar e/ou enviar os documentos."
-
-
         
         creds = None #credencial vazio
 
         if os.path.exists('token.json'): #se existe o token.json
             creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-
 
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token: # se ja foi atualizado manual ele vai permitir sempre
@@ -369,7 +364,7 @@ def gerar_docx():
         except HttpError as err:
             return print(err) 
         """
-        
+        """
         # Fazer upload dos documentos para o S3
         s3_upload_success = upload_to_s3(doc1_path, 'cadastroadv', f'datas/CONTRATO HONORÁRIO - {nome}.docx') and \
                             upload_to_s3(doc2_path, 'cadastroadv', f'datas/JUSTIÇA GRATUITA - {nome}.docx') and \
@@ -447,7 +442,21 @@ def gerar_docx():
 
         else:
             return f"Erro ao gerar e/ou enviar os documentos."
-    
+        """
+
+        # Fazer upload dos documentos para o S3
+        if upload_to_s3(doc1_path, 'cadastroadv', f'datas/CONTRATO HONORÁRIO - {nome}.docx') and \
+           upload_to_s3(doc2_path, 'cadastroadv', f'datas/JUSTIÇA GRATUITA - {nome}.docx') and \
+           upload_to_s3(doc3_path, 'cadastroadv', f'datas/PROCURAÇÃO - {nome}.docx') and \
+           upload_to_s3(doc4_path, 'cadastroadv', f'datas/CAPA DO PROCESSO - {nome}.docx') and \
+           upload_to_s3(doc5_path, 'cadastroadv', f'datas/MINUTA AUXILIO ACIDENTE FEDERAL - {nome}.docx') and \
+           upload_to_s3(doc6_path, 'cadastroadv', f'datas/REQUERIMENTO ADMINISTRATIVO AUXILIO ACIDENTE - {nome}.docx'):
+           return redirect(url_for('download_files', nome=nome))
+           #return "Documentos gerados e enviados com sucesso!"
+        else:
+            return f"Erro ao gerar e/ou enviar os documentos."
+
+            
     except KeyError as e:
         return f"Erro: O campo '{e.args[0]}' não foi encontrado nos dados enviados."
     except Exception as e:
