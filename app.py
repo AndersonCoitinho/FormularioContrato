@@ -53,6 +53,11 @@ def gerar_docx():
 
         # Chamando a função format_data_extenso para obter a data por extenso
         data_extenso = format_data_extenso(data_str)
+
+        # Converta a data para o formato de data do Python
+        data_nascimento = datetime.strptime(data_nascimento_str, "%d/%m/%Y")
+        # Formate a data como "dia/mês/ano" (ou o formato desejado)
+        data_formatada = data_nascimento.strftime("%d/%m/%Y")
         
         
         ### DOC1 = CONTRATO HONORARIOS ###
@@ -385,7 +390,7 @@ def gerar_docx():
                                    fone_recado=fone_recado,
                                    cpf=cpf,
                                    rg=rg,
-                                   data_nascimento=data_nascimento,
+                                   data_nascimento=data_formatada,
                                    endereco=endereco,
                                    bairro=bairro, 
                                    cidade=cidade,
@@ -426,7 +431,7 @@ def download_files(nome):
     fone_recado = request.args.get('fone_recado')
     cpf = request.args.get('cpf')
     rg = request.args.get('rg')
-    data_nascimento = request.args.get('data_nascimento')
+    data_nascimento = request.args.get('data_formatada')
     endereco = request.args.get('endereco')
     bairro = request.args.get('bairro')
     cidade = request.args.get('cidade')
