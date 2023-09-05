@@ -406,13 +406,13 @@ def gerar_docx():
 def download_files(nome):
     s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
 
-    filenames = [#f'CONTRATO HONORÁRIO - {nome}.docx', 
-                  #  f'JUSTIÇA GRATUITA - {nome}.docx', 
-                   # f'PROCURAÇÃO - {nome}.docx', 
-                   # f'CAPA DO PROCESSO - {nome}.docx', 
-                   # f'MINUTA AUXILIO ACIDENTE FEDERAL - {nome}.docx',
-                   # f'REQUERIMENTO ADMINISTRATIVO AUXILIO ACIDENTE - {nome}.docx',
-                   # f'DECLARAÇÃO DE RESIDENCIA - {nome}.docx',
+    filenames = [f'CONTRATO HONORÁRIO - {nome}.docx', 
+                    f'JUSTIÇA GRATUITA - {nome}.docx', 
+                    f'PROCURAÇÃO - {nome}.docx', 
+                    f'CAPA DO PROCESSO - {nome}.docx', 
+                    f'MINUTA AUXILIO ACIDENTE FEDERAL - {nome}.docx',
+                    f'REQUERIMENTO ADMINISTRATIVO AUXILIO ACIDENTE - {nome}.docx',
+                    f'DECLARAÇÃO DE RESIDENCIA - {nome}.docx',
                     f'TERMO DE RENÚNCIA - {nome}.docx'
                 ]
     
