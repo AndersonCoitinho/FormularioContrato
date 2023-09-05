@@ -42,6 +42,7 @@ def gerar_docx():
         fone_recado = request.form['fone_recado'].upper()
         cpf = request.form['cpf'].upper()
         rg = request.form['rg'].upper()
+        data_nascimento = request.form['data_nascimento']
         endereco = request.form['endereco'].upper()
         bairro = request.form['bairro'].upper()
         cep = request.form['cep'].upper()
@@ -384,6 +385,7 @@ def gerar_docx():
                                    fone_recado=fone_recado,
                                    cpf=cpf,
                                    rg=rg,
+                                   data_nascimento=data_nascimento,
                                    endereco=endereco,
                                    bairro=bairro, 
                                    cidade=cidade,
@@ -424,6 +426,7 @@ def download_files(nome):
     fone_recado = request.args.get('fone_recado')
     cpf = request.args.get('cpf')
     rg = request.args.get('rg')
+    data_nascimento = request.args.get('data_nascimento')
     endereco = request.args.get('endereco')
     bairro = request.args.get('bairro')
     cidade = request.args.get('cidade')
@@ -446,6 +449,7 @@ def download_files(nome):
                                fone_recado=fone_recado,
                                cpf=cpf,
                                rg=rg,
+                               data_nascimento=data_nascimento,
                                endereco=endereco,
                                bairro=bairro,
                                cidade=cidade,

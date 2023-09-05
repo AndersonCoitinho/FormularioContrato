@@ -36,6 +36,7 @@
             <td>Cidade</td>
             <td>UF</td>
             <td>CEP</td>
+            <td>Data Nascimento</td>
         </tr>
         <tr>
             <td id="nome" data-copy="{{ nome }}">{{ nome }}</td>
@@ -50,6 +51,7 @@
             <td id="cidade" data-copy="{{ cidade }}">{{ cidade }}</td>
             <td id="estado" data-copy="{{ estado }}">{{ estado }}</td>
             <td id="cep" data-copy="{{ cep }}">{{ cep }}</td>
+            <td id="data_nascimento" data-copy="{{ data_nascimento }}">{{ data_nascimento }}</td>
         </tr>
     </table>
 
@@ -70,7 +72,8 @@
                 document.getElementById('bairro').textContent,
                 document.getElementById('cidade').textContent,
                 document.getElementById('estado').textContent,
-                document.getElementById('cep').textContent
+                document.getElementById('cep').textContent,
+                document.getElementById('data_nascimento').textContent
             ];
 
             var dadosExcel = campos.join('\t');
