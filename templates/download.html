@@ -37,6 +37,7 @@
             <td>UF</td>
             <td>CEP</td>
             <td>Data Nascimento</td>
+            <td>Data Contrato</td>
         </tr>
         <tr>
             <td id="nome" data-copy="{{ nome }}">{{ nome }}</td>
@@ -52,6 +53,7 @@
             <td id="estado" data-copy="{{ estado }}">{{ estado }}</td>
             <td id="cep" data-copy="{{ cep }}">{{ cep }}</td>
             <td id="data_nascimento" data-copy="{{ data_formatada }}">{{ data_formatada }}</td>
+            <td id="data_formatada_contrato" data-copy="{{ data_formatada_contrato }}">{{ data_formatada_contrato }}</td>
         </tr>
     </table>
 
@@ -73,7 +75,8 @@
                 document.getElementById('cidade').textContent,
                 document.getElementById('estado').textContent,
                 document.getElementById('cep').textContent,
-                document.getElementById('data_nascimento').textContent
+                document.getElementById('data_nascimento').textContent,
+                document.getElementById('data_formatada_contrato').textContent
             ];
 
             var dadosExcel = campos.join('\t');

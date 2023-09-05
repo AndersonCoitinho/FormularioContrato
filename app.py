@@ -55,6 +55,12 @@ def gerar_docx():
         data_extenso = format_data_extenso(data_str)
 
         # Converta a data para o formato de data do Python
+        data_contrato_str = datetime.strptime(data_str, "%Y-%m-%d")
+        # Formate a data como "dia/mês/ano" (ou o formato desejado)
+        data_formatada_contrato = data_contrato_str.strftime("%d/%m/%Y")
+
+
+        # Converta a data para o formato de data do Python
         data_nascimento_str = datetime.strptime(data_nascimento, "%Y-%m-%d")
         # Formate a data como "dia/mês/ano" (ou o formato desejado)
         data_formatada = data_nascimento_str.strftime("%d/%m/%Y")
@@ -392,7 +398,8 @@ def gerar_docx():
                                    bairro=bairro, 
                                    cidade=cidade,
                                    estado=estado,
-                                   cep=cep
+                                   cep=cep,
+                                   data_formatada_contrato=data_formatada_contrato
                                    ))
            #return "Documentos gerados e enviados com sucesso!"
         else:
@@ -434,6 +441,7 @@ def download_files(nome):
     cidade = request.args.get('cidade')
     estado = request.args.get('estado')
     cep = request.args.get('cep')
+    data_formatada_contrato = request.args.get('data_formatada_contrato')
 
     try:
         for filename in filenames:
@@ -455,7 +463,8 @@ def download_files(nome):
                                bairro=bairro,
                                cidade=cidade,
                                estado=estado,
-                               cep=cep
+                               cep=cep,
+                               data_formatada_contrato=data_formatada_contrato
                                )
     except NoCredentialsError:
         return "Credenciais do AWS não foram configuradas."
