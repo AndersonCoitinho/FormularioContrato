@@ -57,7 +57,10 @@ def gerar_docx():
         # Converta a data para o formato de data do Python
         data_nascimento_str = datetime.strptime(data_nascimento, "%Y-%m-%d")
         # Formate a data como "dia/mês/ano" (ou o formato desejado)
-        data_formatada = data_nascimento_str.strftime("%d/%m/%Y")
+        data_formatada = data_nascimento_str.strftime("%d-%m-%Y")
+         
+        print(data_formatada)
+        print(data_nascimento)
         
         
         ### DOC1 = CONTRATO HONORARIOS ###
