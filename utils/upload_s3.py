@@ -1,4 +1,5 @@
 import boto3
+import os
 from botocore.exceptions import NoCredentialsError
 
 AWS_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY')
