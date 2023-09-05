@@ -60,8 +60,6 @@ def gerar_docx():
         data_formatada = data_nascimento_str.strftime("%d-%m-%Y")
          
         print(data_formatada)
-        print(data_nascimento)
-        
         
         ### DOC1 = CONTRATO HONORARIOS ###
         doc1 = Document('./modelos/contratoHonorarios.docx') # Substitua 'modelo.docx' pelo caminho do seu modelo DOCX
@@ -393,7 +391,7 @@ def gerar_docx():
                                    fone_recado=fone_recado,
                                    cpf=cpf,
                                    rg=rg,
-                                   data_nascimento=data_formatada,
+                                   data_formatada=data_formatada,
                                    endereco=endereco,
                                    bairro=bairro, 
                                    cidade=cidade,
@@ -434,7 +432,7 @@ def download_files(nome):
     fone_recado = request.args.get('fone_recado')
     cpf = request.args.get('cpf')
     rg = request.args.get('rg')
-    data_nascimento = request.args.get('data_formatada')
+    data_formatada = request.args.get('data_formatada')
     endereco = request.args.get('endereco')
     bairro = request.args.get('bairro')
     cidade = request.args.get('cidade')
@@ -457,7 +455,7 @@ def download_files(nome):
                                fone_recado=fone_recado,
                                cpf=cpf,
                                rg=rg,
-                               data_nascimento=data_nascimento,
+                               data_formatada=data_formatada,
                                endereco=endereco,
                                bairro=bairro,
                                cidade=cidade,
