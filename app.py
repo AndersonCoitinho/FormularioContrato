@@ -374,7 +374,7 @@ def gerar_docx():
            upload_to_s3(doc5_path, 'cadastroadv', f'datas/MINUTA AUXILIO ACIDENTE FEDERAL - {nome}.docx') and \
            upload_to_s3(doc6_path, 'cadastroadv', f'datas/REQUERIMENTO ADMINISTRATIVO AUXILIO ACIDENTE - {nome}.docx') and \
            upload_to_s3(doc7_path, 'cadastroadv', f'datas/DECLARAÇÃO DE RESIDENCIA - {nome}.docx') and \
-           upload_to_s3(doc7_path, 'cadastroadv', f'datas/TERMO DE RENÚNCIA - {nome}.docx'):
+           upload_to_s3(doc8_path, 'cadastroadv', f'datas/TERMO DE RENÚNCIA - {nome}.docx'):
            return redirect(url_for('download_files', 
                                    nome=nome, 
                                    estadoCivil=estadoCivil,
