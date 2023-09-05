@@ -320,6 +320,52 @@ def gerar_docx():
         doc7_path = os.path.join('modelos', f'DECLARAÇÃO DE RESIDENCIA - {nome}.docx')
         doc7.save(doc7_path)
 
+        ### DOC8 = Termo de Renúncia ###
+        doc8 = Document('./modelos/procuracao.docx')
+        for table in doc8.tables: #percorrendo todas as tabelas
+            for row in table.rows: #percorrendo todas as linhas
+                for cell in row.cells: #percorrendo todas as cedulas 
+                    cell_text = cell.text 
+                    if '{{nome}}' in cell_text: #se encontrar {{NOME}}
+                        cell.text = cell_text.replace('{{nome}}', nome) #vai inserir o valor do usuario
+                    if '{{nacionalidade}}' in cell_text:
+                        cell.text = cell_text.replace('{{nacionalidade}}', nacionalidade)
+                    if '{{estadoCivil}}' in cell_text:
+                        cell.text = cell_text.replace('{{estadoCivil}}', estadoCivil)
+                    if '{{profissao}}' in cell_text:
+                        cell.text = cell_text.replace('{{profissao}}', profissao)
+                    if '{{fone}}' in cell_text:
+                        if fone_recado:
+                            cell.text = cell_text.replace('{{fone}}', fone + f' ou {fone_recado}')
+                        else:
+                            cell.text = cell_text.replace('{{fone}}', fone)
+                    if '{{cpf}}' in cell_text:
+                        cell.text = cell_text.replace('{{cpf}}', cpf)
+                    if '{{rg}}' in cell_text:
+                        cell.text = cell_text.replace('{{rg}}', rg)
+                    if '{{endereco}}' in cell_text:
+                        cell.text = cell_text.replace('{{endereco}}', endereco)
+                    if '{{bairro}}' in cell_text:
+                        cell.text = cell_text.replace('{{bairro}}', bairro)
+                    if '{{cep}}' in cell_text:
+                        cell.text = cell_text.replace('{{cep}}', cep)
+                    if '{{cidade}}' in cell_text:
+                        cell.text = cell_text.replace('{{cidade}}', cidade)
+                    if '{{estado}}' in cell_text:
+                        cell.text = cell_text.replace('{{estado}}', estado)
+        
+        for paragraph in doc8.paragraphs: #percorre os paragratos
+            paragraph_text = paragraph.text
+            if '{{cidade}}' in paragraph_text:
+                paragraph.text = paragraph_text.replace('{{cidade}}', cidade)
+            if '{{data}}' in paragraph_text: 
+                paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
+            if '{{nome}}' in paragraph_text:
+                paragraph_text = paragraph_text.replace('{{nome}}', nome) 
+
+        doc8_path = os.path.join('modelos', f'TERMO DE RENÚNCIA - {nome}.docx')
+        doc8.save(doc8_path)
+
         # Fazer upload dos documentos para o S3
         if upload_to_s3(doc1_path, 'cadastroadv', f'datas/CONTRATO HONORÁRIO - {nome}.docx') and \
            upload_to_s3(doc2_path, 'cadastroadv', f'datas/JUSTIÇA GRATUITA - {nome}.docx') and \
@@ -327,7 +373,8 @@ def gerar_docx():
            upload_to_s3(doc4_path, 'cadastroadv', f'datas/CAPA DO PROCESSO - {nome}.docx') and \
            upload_to_s3(doc5_path, 'cadastroadv', f'datas/MINUTA AUXILIO ACIDENTE FEDERAL - {nome}.docx') and \
            upload_to_s3(doc6_path, 'cadastroadv', f'datas/REQUERIMENTO ADMINISTRATIVO AUXILIO ACIDENTE - {nome}.docx') and \
-           upload_to_s3(doc7_path, 'cadastroadv', f'datas/DECLARAÇÃO DE RESIDENCIA - {nome}.docx'):
+           upload_to_s3(doc7_path, 'cadastroadv', f'datas/DECLARAÇÃO DE RESIDENCIA - {nome}.docx') and \
+           upload_to_s3(doc7_path, 'cadastroadv', f'datas/TERMO DE RENÚNCIA - {nome}.docx'):
            return redirect(url_for('download_files', 
                                    nome=nome, 
                                    estadoCivil=estadoCivil,
