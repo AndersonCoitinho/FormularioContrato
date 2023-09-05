@@ -1,25 +1,100 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Downloads de Arquivos</title>
+<html lang="pt-br">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../static/styleDownload.css">
+    <title>Downloads de Arquivos</title>
 </head>
-<body onload="startDownloads()">
+
+<body>
     <h1>Downloads de Arquivos</h1>
     <ul>
-    {% for item in download_links %}
+        {% for item in download_links %}
         <li>
             <p>Arquivo: {{ item.filename }}</p>
             <a href="{{ item.download_link }}">Baixar Arquivo</a>
-            <!--
-            <a class="download-link" data-download-url="{{ item.download_link }}">Baixar Arquivo</a>
-            <p>Arquivo: {{ item.filename }}</p>
-            <a class="download-link" data-download-url="{{ item.download_link }}">Baixar Arquivo</a>
-            -->
         </li>
         </li>
-    {% endfor %}
+        {% endfor %}
     </ul>
-    
+
+
+    <h2>Para a Planilha:</h2>
+    <table border="1">
+        <tr>
+            <td>Nome</td>
+            <td>Estado Civil</td>
+            <td>Profissão</td>
+            <td>Telefone</td>
+            <td>Tel Recado</td>
+            <td>CPF</td>
+            <td>RG</td>
+            <td>Endereço</td>
+            <td>Bairro</td>
+            <td>Cidade</td>
+            <td>UF</td>
+            <td>CEP</td>
+        </tr>
+        <tr>
+            <td id="nome" data-copy="{{ nome }}">{{ nome }}</td>
+            <td id="estadoCivil" data-copy="{{ estadoCivil }}">{{ estadoCivil }}</td>
+            <td id="profissao" data-copy="{{ profissao }}">{{ profissao }}</td>
+            <td id="fone" data-copy="{{ fone }}">{{ fone }}</td>
+            <td id="foneRecado" data-copy="{{ fone_recado }}">{{ fone_recado }}</td>
+            <td id="cpf" data-copy="{{ cpf }}">{{ cpf }}</td>
+            <td id="rg" data-copy="{{ rg }}">{{ rg }}</td>
+            <td id="endereco" data-copy="{{ endereco }}">{{ endereco }}</td>
+            <td id="bairro" data-copy="{{ bairro }}">{{ bairro }}</td>
+            <td id="cidade" data-copy="{{ cidade }}">{{ cidade }}</td>
+            <td id="estado" data-copy="{{ estado }}">{{ estado }}</td>
+            <td id="cep" data-copy="{{ cep }}">{{ cep }}</td>
+        </tr>
+    </table>
+
+    <button id="copiarDados" onclick="copiarDados()">Copiar Dados</button>
+
+    <script>
+        function copiarDados() {
+            var campos = [
+                document.getElementById('nome').textContent,
+                document.getElementById('estadoCivil').textContent,
+                document.getElementById('profissao').textContent,
+                document.getElementById('fone').textContent,
+                document.getElementById('foneRecado').textContent,
+                document.getElementById('cpf').textContent,
+                document.getElementById('rg').textContent,
+                document.getElementById('endereco').textContent,
+                document.getElementById('bairro').textContent,
+                document.getElementById('cidade').textContent,
+                document.getElementById('estado').textContent,
+                document.getElementById('cep').textContent
+            ];
+
+            var dadosExcel = campos.join('\t');
+
+            // Cria um elemento de input
+            var inputElement = document.createElement('input');
+            inputElement.setAttribute('value', dadosExcel);
+
+            // Anexa o elemento de input à página
+            document.body.appendChild(inputElement);
+
+            // Seleciona o texto no input
+            inputElement.select();
+
+            // Copia o texto para a área de transferência
+            document.execCommand('copy');
+
+            // Remove o elemento de input
+            document.body.removeChild(inputElement);
+
+            // Feedback para o usuário
+            //alert('Dados copiados para a área de transferência');
+        }
+    </script>
+
 </body>
+
 </html>
