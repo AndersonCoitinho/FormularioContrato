@@ -57,10 +57,8 @@ def gerar_docx():
         # Converta a data para o formato de data do Python
         data_nascimento_str = datetime.strptime(data_nascimento, "%Y-%m-%d")
         # Formate a data como "dia/mês/ano" (ou o formato desejado)
-        data_formatada = data_nascimento_str.strftime("%d-%m-%Y")
-         
-        print(data_formatada)
-        
+        data_formatada = data_nascimento_str.strftime("%d/%m/%Y")
+                 
         ### DOC1 = CONTRATO HONORARIOS ###
         doc1 = Document('./modelos/contratoHonorarios.docx') # Substitua 'modelo.docx' pelo caminho do seu modelo DOCX
         for table in doc1.tables: #percorrendo todas as tabelas
@@ -224,7 +222,6 @@ def gerar_docx():
         doc4_path = os.path.join('modelos', f'CAPA DO PROCESSO - {nome}.docx')
         doc4.save(doc4_path)
 
-
         ### DOC5 = Minuta Auxilio Acidente Federal ###
         doc5 = Document('./modelos/minutaAuxilioAcidenteFederal.docx')
            
@@ -260,7 +257,6 @@ def gerar_docx():
 
         doc5_path = os.path.join('modelos', f'MINUTA AUXILIO ACIDENTE FEDERAL - {nome}.docx')
         doc5.save(doc5_path)
-
 
         ### DOC6 = Requerimento Adm Auxilio Acidente ###
         doc6 = Document('./modelos/requerimentoAdmAuxilioAcidente.docx')
@@ -438,7 +434,6 @@ def download_files(nome):
     cidade = request.args.get('cidade')
     estado = request.args.get('estado')
     cep = request.args.get('cep')
-
 
     try:
         for filename in filenames:
