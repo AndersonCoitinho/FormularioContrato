@@ -53,7 +53,7 @@ def gerar_docx():
         # Chamando a função format_data_extenso para obter a data por extenso
         data_extenso = format_data_extenso(data_str)
         
-
+        
         ### DOC1 = CONTRATO HONORARIOS ###
         doc1 = Document('./modelos/contratoHonorarios.docx') # Substitua 'modelo.docx' pelo caminho do seu modelo DOCX
         for table in doc1.tables: #percorrendo todas as tabelas
@@ -319,7 +319,7 @@ def gerar_docx():
 
         doc7_path = os.path.join('modelos', f'DECLARAÇÃO DE RESIDENCIA - {nome}.docx')
         doc7.save(doc7_path)
-
+        
         ### DOC8 = Termo de Renúncia ###
         doc8 = Document('./modelos/termoDeRenuncia.docx')
         for table in doc8.tables: #percorrendo todas as tabelas
@@ -353,19 +353,20 @@ def gerar_docx():
                         cell.text = cell_text.replace('{{cidade}}', cidade)
                     if '{{estado}}' in cell_text:
                         cell.text = cell_text.replace('{{estado}}', estado)
-        
+
         for paragraph in doc8.paragraphs: #percorre os paragratos
             paragraph_text = paragraph.text
             if '{{cidade}}' in paragraph_text:
-                paragraph.text = paragraph_text.replace('{{cidade}}', cidade)
+                paragraph_text = paragraph_text.replace('{{cidade}}', cidade)
             if '{{data}}' in paragraph_text: 
-                paragraph.text = paragraph_text.replace('{{data}}', data_extenso)
+                paragraph_text = paragraph_text.replace('{{data}}', data_extenso)
             if '{{nome}}' in paragraph_text:
                 paragraph_text = paragraph_text.replace('{{nome}}', nome) 
-
+            paragraph.text = paragraph_text
+        
         doc8_path = os.path.join('modelos', f'TERMO DE RENÚNCIA - {nome}.docx')
         doc8.save(doc8_path)
-
+        
         # Fazer upload dos documentos para o S3
         if upload_to_s3(doc1_path, 'cadastroadv', f'datas/CONTRATO HONORÁRIO - {nome}.docx') and \
            upload_to_s3(doc2_path, 'cadastroadv', f'datas/JUSTIÇA GRATUITA - {nome}.docx') and \
@@ -392,7 +393,8 @@ def gerar_docx():
            #return "Documentos gerados e enviados com sucesso!"
         else:
             return f"Erro ao gerar e/ou enviar os documentos."
-
+        
+        return "ok"
     except KeyError as e:
         return f"Erro: O campo '{e.args[0]}' não foi encontrado nos dados enviados."
     except Exception as e:
@@ -404,13 +406,13 @@ def gerar_docx():
 def download_files(nome):
     s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
 
-    filenames = [f'CONTRATO HONORÁRIO - {nome}.docx', 
-                    f'JUSTIÇA GRATUITA - {nome}.docx', 
-                    f'PROCURAÇÃO - {nome}.docx', 
-                    f'CAPA DO PROCESSO - {nome}.docx', 
-                    f'MINUTA AUXILIO ACIDENTE FEDERAL - {nome}.docx',
-                    f'REQUERIMENTO ADMINISTRATIVO AUXILIO ACIDENTE - {nome}.docx',
-                    f'DECLARAÇÃO DE RESIDENCIA - {nome}.docx',
+    filenames = [#f'CONTRATO HONORÁRIO - {nome}.docx', 
+                  #  f'JUSTIÇA GRATUITA - {nome}.docx', 
+                   # f'PROCURAÇÃO - {nome}.docx', 
+                   # f'CAPA DO PROCESSO - {nome}.docx', 
+                   # f'MINUTA AUXILIO ACIDENTE FEDERAL - {nome}.docx',
+                   # f'REQUERIMENTO ADMINISTRATIVO AUXILIO ACIDENTE - {nome}.docx',
+                   # f'DECLARAÇÃO DE RESIDENCIA - {nome}.docx',
                     f'TERMO DE RENÚNCIA - {nome}.docx'
                 ]
     
