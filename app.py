@@ -321,7 +321,7 @@ def gerar_docx():
         doc7.save(doc7_path)
 
         ### DOC8 = Termo de Renúncia ###
-        doc8 = Document('./modelos/procuracao.docx')
+        doc8 = Document('./modelos/termoDeRenuncia.docx')
         for table in doc8.tables: #percorrendo todas as tabelas
             for row in table.rows: #percorrendo todas as linhas
                 for cell in row.cells: #percorrendo todas as cedulas 
