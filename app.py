@@ -410,7 +410,8 @@ def download_files(nome):
                     f'CAPA DO PROCESSO - {nome}.docx', 
                     f'MINUTA AUXILIO ACIDENTE FEDERAL - {nome}.docx',
                     f'REQUERIMENTO ADMINISTRATIVO AUXILIO ACIDENTE - {nome}.docx',
-                    f'DECLARAÇÃO DE RESIDENCIA - {nome}.docx'
+                    f'DECLARAÇÃO DE RESIDENCIA - {nome}.docx',
+                    f'TERMO DE RENÚNCIA - {nome}.docx'
                 ]
     
     download_links = []
