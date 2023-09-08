@@ -225,7 +225,7 @@ def gerar_docx():
                     if '{{estado}}' in cell_text:
                         cell.text = cell_text.replace('{{estado}}', estado)
                     if '{{data_nascimento}}' in cell_text:
-                        cell.text = cell_text.replace('{{data_nascimento}}', data_formatada_contrato)
+                        cell.text = cell_text.replace('{{data_nascimento}}', data_formatada)
 
         doc4_path = os.path.join('modelos', f'CAPA DO PROCESSO - {nome}.docx')
         doc4.save(doc4_path)
